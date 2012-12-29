@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+
+  <head>
+    {% if name %}
+        <title>{{ name }}'s Page</title>
+    {% else %}
+        <title>User Page</title>
+    {% endif %}
+  </head>
+
+  <body>
+    {% if name %}
+        <h1>Welcome {{ name }}!</h1>
+    {% else %}
+        <h1>Welcome!</h1>
+    {% endif %}
+  </body>
+
+</html>
