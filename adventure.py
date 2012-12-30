@@ -1,10 +1,17 @@
+def build_description(room, base, **object):
+    for obj, desc in object.iteritems():
+        print obj, desc
+        if obj in map(str, room.objects):
+            base += '  ' + desc
+    return base 
+
 class Room(object):
 
-    def __init__(self, exits={}, objects=[], name='', description=''):
+    def __init__(self, exits={}, objects=[], name='', base_description='', **objdesc):
         self.exits = exits
         self.objects = objects
         self.name = name
-        self.description = description
+        self.description = build_description(self, base_description, objdesc)
 
         for object in self.objects: 
             object.location = self
@@ -12,11 +19,6 @@ class Room(object):
     def __str__(self):
         return self.name
 
-    def build_description(self, base, **object):
-        for obj, desc in object.iteritems():
-            if str(obj) in map(str, self.objects):
-                base += '  ' + desc
-        return base 
 
 class Object(object):
 
@@ -43,6 +45,9 @@ class User(object):
         self.name = name
         self.inventory = inventory
         self.location = location
+
+        for object in self.inventory: 
+            object.location = self
 
     def status(self):
         print '   - current location: {}\n   - inventory: {}'.format(str(self.location), map(str, [object for object in self.inventory]))
