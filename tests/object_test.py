@@ -1,4 +1,4 @@
-from adventure import Object, Openable, Lightable, \
+from scaffolding import Object, Openable, Lightable, \
                         Bed, Dresser, Lamp
 
 import unittest

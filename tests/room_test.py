@@ -1,4 +1,4 @@
-from adventure import Room, Object, \
+from scaffolding import Room, Object, \
                         Openable, Lightable, \
                         Bed, Dresser, Lamp
 

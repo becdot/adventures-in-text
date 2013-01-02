@@ -1,3 +1,5 @@
+# Parent classes
+
 class Room(object):
     def __init__(self, name, objects, description, exits):
         self.name = name
@@ -12,7 +14,10 @@ class Object(object):
     def look(self):
         return str(self)
 
+# Properties
+
 class Climbable(object):
+    # TODO make this more useful
     
     def stand(self):
         pass
@@ -65,6 +70,8 @@ class Lightable(object):
     def turn_off(self):
         return self.snuff()
 
+# Specific Objects
+
 class Bed(Object):
 
     def __init__(self):
@@ -103,15 +110,3 @@ class Lamp(Object, Lightable):
             return '  '.join([self.description, self.on_description])
         else:
             return '  '.join([self.description, self.off_description])
-
-
-
-bed = Bed()
-dresser = Dresser()
-lamp = Lamp()
-
-
-
-bedroom = Room(name='Bedroom', objects=[bed, dresser, lamp], description='A small blue room with homey furnishings.', \
-            exits={})
-
