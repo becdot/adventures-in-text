@@ -1,7 +1,7 @@
 # Parent classes
 
 class Room(object):
-    def __init__(self, name, objects, description, exits):
+    def __init__(self, name, objects, description, exits={}):
         self.name = name
         self.objects = objects
         self.description = description
@@ -16,6 +16,22 @@ class Object(object):
 
     def look(self):
         return str(self)
+
+class User(object):
+    def __init__(self, name, inventory, location):
+        self.name = name
+        self.inventory = inventory
+        self.location = location
+
+    def get(self, obj):
+        room = self.location
+        if obj in room.objects:
+            self.inventory.append(obj)
+            room.objects.remove(obj)
+        elif obj in self.inventory:
+            return "You already have that object."
+        else:
+            return "That object does not exist."
 
 # Properties
 
@@ -113,3 +129,5 @@ class Lamp(Object, Lightable):
             return '  '.join([self.description, self.on_description])
         else:
             return '  '.join([self.description, self.off_description])
+
+# bec = User(name=bec, inventory=[], location=dining_room)

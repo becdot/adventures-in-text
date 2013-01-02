@@ -4,19 +4,19 @@ from scaffolding import Room, Object, \
 
 import unittest
 
-class TestAdventure(unittest.TestCase):
+class TestRooms(unittest.TestCase):
 
     def setUp(self):
         self.dresser = Dresser()
         self.bed = Bed()
         self.lamp = Lamp()
-        self.room = Room(name = "Room", objects = [self.dresser, self.bed, self.lamp], description = "A room.", exits = {})
+        self.room = Room(name = "Room", objects = [self.dresser, self.bed, self.lamp], description = "A room.", exits={})
     def tearDown(self):
         pass
 
 
     def test_room_defaults(self):
-        "Defaults are being passes correctly"
+        "Defaults are being passed correctly"
         self.assertEquals(self.room.name, "Room")
         self.assertEquals(self.room.objects, [self.dresser, self.bed, self.lamp])
         self.assertEquals(self.room.description, "A room.")
