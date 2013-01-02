@@ -7,6 +7,9 @@ class Room(object):
         self.description = description
         self.exits = exits
 
+    def look(self):
+        return self.description
+
 class Object(object):
     def __str__(self):
         return self.description
