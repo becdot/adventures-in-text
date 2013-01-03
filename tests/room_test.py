@@ -11,6 +11,7 @@ class TestRooms(unittest.TestCase):
         self.bed = Bed()
         self.lamp = Lamp()
         self.room = Room(name = "Room", objects = [self.dresser, self.bed, self.lamp], description = "A room.", exits={})
+        
     def tearDown(self):
         pass
 

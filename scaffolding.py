@@ -19,12 +19,6 @@ class Object(object):
 
 # Properties
 
-class Climbable(object):
-    # TODO make this more useful
-    
-    def stand(self):
-        pass
-
 class Openable(object):
     # TODO make messages not hardcoded?
     
@@ -96,6 +90,33 @@ class Gettable(object):
         else:
             return "That item is not currently in your inventory."
 
+class Climbable(object):
+    
+    def climb(self):
+        if self.has_user:
+            self.has_user = False
+            return "You step carefully back down."
+        else:
+            self.has_user = True
+            return "You clamber onto the object."
+    def stand(self):
+        return self.climb()
+
+    def get_on(self):
+        if self.has_user:
+            return "You are already standing on that object!"
+        else:
+            self.has_user = True
+            return "You clamber onto the object."
+    def get_off(self):
+        if self.has_user:
+            self.has_user = False
+            return "You step carefully back down."
+        else:
+            return "You are not standing on anything."
+    def get_down(self):
+        return self.get_off()
+
 # Specific Objects
 
 class Bed(Object):
@@ -124,10 +145,9 @@ class Dresser(Object, Openable):
         else:
             return '  '.join([self.description, self.closed_description])
 
-class Lamp(Object, Lightable, Gettable):
+class Lamp(Object, Lightable):
     def __init__(self):
         self.is_lit = False
-        self.gettable = True
         self.description = "The lamp is set high on the wall, its tawdry plaid shade almost out of reach."
         self.on_description = "The object throws a soft light, illuminating the room."
         self.off_description = "The bulb is cold and dusty."
@@ -137,3 +157,18 @@ class Lamp(Object, Lightable, Gettable):
             return '  '.join([self.description, self.on_description])
         else:
             return '  '.join([self.description, self.off_description])
+
+class Chair(Object, Climbable, Gettable):
+    def __init__(self):
+        self.has_user = False
+        self.gettable = True
+        self.description = "A sturdy wooden chair with dark wooden slats."
+
+
+# Bedroom = Room(name='Bedroom', objects=[Bed, Lamp, Dresser], description='A homey room with blue wallpaper 
+#            and old-fashioned scenes hanging from brass frames.  There is a large four-poster against one wall
+#            and a small dresser in the corner.', exits={'west': 'Closet'})
+# Closet = Room(name='Closet', objects=[Chair], description='Significantly colder than the bedroom, 
+#            the closet has a slanted roof that only makes it feel more cramped.', exits: {'east': 'Bedroom'})
+#
+# Climbable, Unreachable, Container

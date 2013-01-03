@@ -1,5 +1,5 @@
-from scaffolding import Object, Openable, Lightable, \
-                        Bed, Dresser, Lamp
+from scaffolding import Object, Openable, Lightable, Gettable, \
+                        Bed, Dresser, Lamp, Chair
 
 import unittest
 
@@ -13,6 +13,7 @@ class TestObjects(unittest.TestCase):
         self.dresser = Dresser()
         self.bed = Bed()
         self.lamp = Lamp()
+        self.chair = Chair()
 
     def tearDown(self):
         pass
@@ -107,36 +108,64 @@ class TestObjects(unittest.TestCase):
         # lamp is off
         self.assertEquals(self.lamp.snuff(), "The object cannot get any darker.")
         self.assertFalse(self.lamp.is_lit)
-    def test_get_lamp(self):
+
+    # test chair climability
+    def test_chair_starts_off(self):
+        "chair.has_user defaults to false"
+        self.assertFalse(self.chair.has_user)
+    def test_chair_look(self):
+        "chair.look() returns the chair.description"
+        self.assertEquals(self.chair.look(), str(self.chair))
+    def test_climbing_chair(self):
+        """Climbing a chair that does not already have a user standing on it sets has_user to True
+            Otherwise, climbing sets has_user to False (climb is multipurpose)."""
+        # chair is unoccupied
+        self.assertEquals(self.chair.climb(), "You clamber onto the object.")
+        self.assertTrue(self.chair.has_user)
+        self.assertEquals(self.chair.climb(), "You step carefully back down.")
+        self.assertFalse(self.chair.has_user)
+    def test_get_on_and_off_chair(self):
+        "Get_on and get_off are single-purpose (i.e. a user cannot use get_on to get off an object)"
+        self.assertEquals(self.chair.get_off(), "You are not standing on anything.")
+        self.assertFalse(self.chair.has_user)
+        self.assertEquals(self.chair.get_on(), "You clamber onto the object.")
+        self.assertTrue(self.chair.has_user)
+        self.assertEquals(self.chair.get_on(), "You are already standing on that object!")
+        self.assertTrue(self.chair.has_user)
+        self.assertEquals(self.chair.get_off(), "You step carefully back down.")
+        self.assertFalse(self.chair.has_user)
+
+    # test chair getability
+    def test_get_chair(self):
         "Getting an object removes it from room.objects and adds it to the passed-in inventory"
         inv = []
-        room = FakeRoom(self.lamp, self.bed)
-        self.lamp.get(room, inv)
+        room = FakeRoom(self.chair, self.bed)
+        self.chair.get(room, inv)
         self.assertEquals(room.objects, [self.bed])
-        self.assertEquals(inv, [self.lamp])
+        self.assertEquals(inv, [self.chair])
     def test_getting_object_not_in_room_objects_returns_error_message(self):
         """Getting an object that is already in user's inventory returns an error message, as does
             trying to get an object that does not exist."""
-        inv = [self.lamp]
+        inv = [self.chair]
         room = FakeRoom(self.bed)
-        self.assertEquals(self.lamp.get(room, inv), "You already have that object.")
+        self.assertEquals(self.chair.get(room, inv), "You already have that object.")
         inv = []
-        self.assertEquals(self.lamp.get(room, inv), "That object does not exist.")
-    def test_drop_lamp(self):
+        self.assertEquals(self.chair.get(room, inv), "That object does not exist.")
+    def test_drop_chair(self):
         "Dropping an item removes it from user's inventory and places it in room.objects"
-        inv = [self.lamp]
+        inv = [self.chair]
         room = FakeRoom(self.bed)
-        self.lamp.drop(room, inv)
+        self.chair.drop(room, inv)
         self.assertEquals(inv, [])
-        self.assertEquals(room.objects, [self.bed, self.lamp])
+        self.assertEquals(room.objects, [self.bed, self.chair])
     def test_drop_item_not_in_inventory(self):
         "Trying to drop an item that is not currently in the user's inventory returns an error message"
         inv = []
         room = FakeRoom(self.bed)
-        self.assertEquals(self.lamp.drop(room, inv), "That item is not currently in your inventory.")
-        room.objects.append(self.lamp)
-        self.assertEquals(self.lamp.drop(room, inv), "That item is not currently in your inventory.")
-        
+        self.assertEquals(self.chair.drop(room, inv), "That item is not currently in your inventory.")
+        room.objects.append(self.chair)
+        self.assertEquals(self.chair.drop(room, inv), "That item is not currently in your inventory.")
+
 
     # test openable
     def test_openable_synonyms(self):
@@ -161,12 +190,27 @@ class TestObjects(unittest.TestCase):
 
     # test gettable
     def test_gettable_synonyms(self):
-        "Calling lamp.pickup = lamp.get"
+        "Calling chair.pickup = chair.get"
         inv = []
-        room = FakeRoom(self.lamp, self.bed)
-        self.lamp.pickup(room, inv)
+        room = FakeRoom(self.chair, self.bed)
+        self.chair.pickup(room, inv)
         self.assertEquals(room.objects, [self.bed])
 
+    # test climbable
+    def test_climbable_synonyms(self):
+        "Calling chair.stand/get_on/get_off/get_down calls chair.climb"
+        # stand is multipurpose (i.e. can be used to both get on and get off a climbable object)
+        self.chair.stand()
+        self.assertTrue(self.chair.has_user)
+        self.chair.stand()
+        self.assertFalse(self.chair.has_user)
+        # get_on, get_off, and get_down are single purpose
+        self.chair.get_on()
+        self.assertTrue(self.chair.has_user)
+        self.chair.get_off()
+        self.assertFalse(self.chair.has_user)
+        self.chair.get_down()
+        self.assertFalse(self.chair.has_user)
 
 if __name__ == "__main__":
     unittest.main()
