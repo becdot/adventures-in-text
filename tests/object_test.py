@@ -3,6 +3,10 @@ from scaffolding import Object, Openable, Lightable, \
 
 import unittest
 
+class FakeRoom:
+    def __init__(self, *objs):
+        self.objects = [o for o in objs]
+
 class TestObjects(unittest.TestCase):
 
     def setUp(self):
@@ -103,6 +107,36 @@ class TestObjects(unittest.TestCase):
         # lamp is off
         self.assertEquals(self.lamp.snuff(), "The object cannot get any darker.")
         self.assertFalse(self.lamp.is_lit)
+    def test_get_lamp(self):
+        "Getting an object removes it from room.objects and adds it to the passed-in inventory"
+        inv = []
+        room = FakeRoom(self.lamp, self.bed)
+        self.lamp.get(room, inv)
+        self.assertEquals(room.objects, [self.bed])
+        self.assertEquals(inv, [self.lamp])
+    def test_getting_object_not_in_room_objects_returns_error_message(self):
+        """Getting an object that is already in user's inventory returns an error message, as does
+            trying to get an object that does not exist."""
+        inv = [self.lamp]
+        room = FakeRoom(self.bed)
+        self.assertEquals(self.lamp.get(room, inv), "You already have that object.")
+        inv = []
+        self.assertEquals(self.lamp.get(room, inv), "That object does not exist.")
+    def test_drop_lamp(self):
+        "Dropping an item removes it from user's inventory and places it in room.objects"
+        inv = [self.lamp]
+        room = FakeRoom(self.bed)
+        self.lamp.drop(room, inv)
+        self.assertEquals(inv, [])
+        self.assertEquals(room.objects, [self.bed, self.lamp])
+    def test_drop_item_not_in_inventory(self):
+        "Trying to drop an item that is not currently in the user's inventory returns an error message"
+        inv = []
+        room = FakeRoom(self.bed)
+        self.assertEquals(self.lamp.drop(room, inv), "That item is not currently in your inventory.")
+        room.objects.append(self.lamp)
+        self.assertEquals(self.lamp.drop(room, inv), "That item is not currently in your inventory.")
+        
 
     # test openable
     def test_openable_synonyms(self):
@@ -124,6 +158,14 @@ class TestObjects(unittest.TestCase):
         self.assertEquals(turn_on_if_off, light_if_off)
         self.lamp.is_lit = False
         self.assertEquals(self.lamp.turn_off(), self.lamp.snuff())
+
+    # test gettable
+    def test_gettable_synonyms(self):
+        "Calling lamp.pickup = lamp.get"
+        inv = []
+        room = FakeRoom(self.lamp, self.bed)
+        self.lamp.pickup(room, inv)
+        self.assertEquals(room.objects, [self.bed])
 
 
 if __name__ == "__main__":

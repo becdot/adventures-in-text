@@ -17,21 +17,25 @@ class Object(object):
     def look(self):
         return str(self)
 
-class User(object):
-    def __init__(self, name, inventory, location):
-        self.name = name
-        self.inventory = inventory
-        self.location = location
+# class User(object):
+#     def __init__(self, name, inventory, location):
+#         self.name = name
+#         self.inventory = inventory
+#         self.location = location
 
-    def get(self, obj):
-        room = self.location
-        if obj in room.objects:
-            self.inventory.append(obj)
-            room.objects.remove(obj)
-        elif obj in self.inventory:
-            return "You already have that object."
-        else:
-            return "That object does not exist."
+#     def get(self, obj):
+#         room = self.location
+#         if obj in room.objects:
+#             try:
+#                 if obj.gettable:
+#                     self.inventory.append(obj)
+#                     room.objects.remove(obj)
+#             except AttributeError:
+#                 return "You cannot pick up that object."
+#         elif obj in self.inventory:
+#             return "You already have that object."
+#         else:
+#             return "That object does not exist."
 
 # Properties
 
@@ -89,6 +93,29 @@ class Lightable(object):
     def turn_off(self):
         return self.snuff()
 
+class Gettable(object):
+
+    def get(self, room, inv):
+        if self.gettable:
+            if self in room.objects:
+                inv.append(self)
+                room.objects.remove(self)
+            elif self in inv:
+                return "You already have that object."
+            else:
+                return "That object does not exist."
+        else:
+            return "You cannot pick up that object."
+    def pickup(self, room, inv):
+        return self.get(room, inv)
+
+    def drop(self, room, inv):
+        if self in inv:
+            room.objects.append(self)
+            inv.remove(self)
+        else:
+            return "That item is not currently in your inventory."
+
 # Specific Objects
 
 class Bed(Object):
@@ -117,9 +144,10 @@ class Dresser(Object, Openable):
         else:
             return '  '.join([self.description, self.closed_description])
 
-class Lamp(Object, Lightable):
+class Lamp(Object, Lightable, Gettable):
     def __init__(self):
         self.is_lit = False
+        self.gettable = True
         self.description = "The lamp is set high on the wall, its tawdry plaid shade almost out of reach."
         self.on_description = "The object throws a soft light, illuminating the room."
         self.off_description = "The bulb is cold and dusty."
@@ -129,5 +157,3 @@ class Lamp(Object, Lightable):
             return '  '.join([self.description, self.on_description])
         else:
             return '  '.join([self.description, self.off_description])
-
-# bec = User(name=bec, inventory=[], location=dining_room)
