@@ -1,0 +1,4 @@
+To do
+
+- when doing grammar, make sure that user cannot leave room if still standing on something (alternatively, set obj.has_user to False)
+- put object attributes as default arguments so that they can be customized more easily

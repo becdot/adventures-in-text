@@ -117,6 +117,11 @@ class Climbable(object):
     def get_down(self):
         return self.get_off()
 
+class Unreachable(object):
+    # dir(class)?
+    pass
+
+
 # Specific Objects
 
 class Bed(Object):
