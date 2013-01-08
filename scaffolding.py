@@ -67,6 +67,38 @@ class Lightable(object):
     def turn_off(self):
         return self.snuff()
 
+class UnreachableLight(Lightable):
+
+    def _is_standing(self, room):
+        self.block = True
+        if room:
+            for obj in room.objects:
+                try:
+                    if obj.has_user:
+                        self.block = False
+                except AttributeError:
+                    pass
+
+    def light(self):
+        self._is_standing(self._room)
+        if self.block:
+            return self.error_description
+        else:
+            return super(UnreachableLight, self).light()
+
+    def turn_on(self):
+        return self.light()
+
+    def snuff(self):
+        self._is_standing(self._room)
+        if self.block:
+            return self.error_description
+        else:
+            return super(UnreachableLight, self).snuff()
+
+    def turn_off(self):
+        return self.snuff()
+
 class Gettable(object):
 
     def get(self, room, inv):
@@ -92,6 +124,8 @@ class Gettable(object):
 
 class Climbable(object):
     
+    # climb and stand are multipurpose (i.e. calling climb the first time will set has_user to True, 
+    # while calling climb again will set has_user to False)
     def climb(self):
         if self.has_user:
             self.has_user = False
@@ -101,7 +135,7 @@ class Climbable(object):
             return "You clamber onto the object."
     def stand(self):
         return self.climb()
-
+    # get_on, get_off, and get_down are single-purpose
     def get_on(self):
         if self.has_user:
             return "You are already standing on that object!"
@@ -116,11 +150,6 @@ class Climbable(object):
             return "You are not standing on anything."
     def get_down(self):
         return self.get_off()
-
-class Unreachable(object):
-    # dir(class)?
-    pass
-
 
 # Specific Objects
 
@@ -153,6 +182,23 @@ class Dresser(Object, Openable):
 class Lamp(Object, Lightable):
     def __init__(self):
         self.is_lit = False
+        self.description = "The lamp is set high on the wall, its tawdry plaid shade almost out of reach."
+        self.on_description = "The object throws a soft light, illuminating the room."
+        self.off_description = "The bulb is cold and dusty."
+
+    def __str__(self):
+        if self.is_lit:
+            return '  '.join([self.description, self.on_description])
+        else:
+            return '  '.join([self.description, self.off_description])
+
+class UnreachableLamp(Object, UnreachableLight):
+
+    def __init__(self, room=None):
+        self._room = room
+        self.block = True
+        self.is_lit = False
+        self.error_description = "You strain but cannot quite reach the switch."
         self.description = "The lamp is set high on the wall, its tawdry plaid shade almost out of reach."
         self.on_description = "The object throws a soft light, illuminating the room."
         self.off_description = "The bulb is cold and dusty."

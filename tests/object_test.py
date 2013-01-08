@@ -1,5 +1,5 @@
-from scaffolding import Object, Openable, Lightable, Gettable, \
-                        Bed, Dresser, Lamp, Chair
+from scaffolding import Object, Openable, Lightable, UnreachableLight, Gettable, \
+                        Bed, Dresser, Lamp, UnreachableLamp, Chair
 
 import unittest
 
@@ -13,6 +13,7 @@ class TestObjects(unittest.TestCase):
         self.dresser = Dresser()
         self.bed = Bed()
         self.lamp = Lamp()
+        self.unreachable_lamp = UnreachableLamp()
         self.chair = Chair()
 
     def tearDown(self):
@@ -108,6 +109,56 @@ class TestObjects(unittest.TestCase):
         # lamp is off
         self.assertEquals(self.lamp.snuff(), "The object cannot get any darker.")
         self.assertFalse(self.lamp.is_lit)
+
+    # test unreachable lamp
+    def test_unreachable_lamp_starts_off(self):
+        "unreachable_lamp.is_lit defaults to false"
+        self.assertFalse(self.unreachable_lamp.is_lit)
+    def test_unreachable_lamp_descriptions(self):
+        """unreachable_lamp returns the description + off_description when lamp.is_lit is False
+         and description + on_description when lamp.is_lit is True"""
+        # off description
+        self.assertEquals(str(self.unreachable_lamp), self.unreachable_lamp.description + '  ' + self.unreachable_lamp.off_description)
+        # on description
+        self.unreachable_lamp.is_lit = True
+        self.assertEquals(str(self.unreachable_lamp), self.unreachable_lamp.description + '  ' + self.unreachable_lamp.on_description)
+    def test_unreachable_lamp_look(self):
+        "unreachable_lamp.look() returns the unreachable_lamp.description + on/off description (based on unreachable_lamp.is_lit)"
+        self.assertEquals(self.unreachable_lamp.look(), str(self.unreachable_lamp))
+        self.unreachable_lamp.is_lit = True
+        self.assertEquals(self.unreachable_lamp.look(), str(self.unreachable_lamp))
+    def test_error_message_when_user_is_not_standing(self):
+        "Trying to perform an action on the unreachable lamp returns an error message if the user is not standing on something."
+        # unreachable_lamp is off
+        self.assertEquals(self.unreachable_lamp.light(), self.unreachable_lamp.error_description)
+        self.assertFalse(self.unreachable_lamp.is_lit)
+        # unreachable_lamp is lit
+        self.unreachable_lamp.is_lit = True
+        self.assertEquals(self.unreachable_lamp.snuff(), self.unreachable_lamp.error_description)
+        self.assertTrue(self.unreachable_lamp.is_lit)
+    def test_light_unreachable_lamp(self):
+        """User can light an unreachable lamp if standing on something."""
+        room = FakeRoom(self.bed, self.chair)
+        self.unreachable_lamp._room = room
+        self.chair.has_user = True
+        # unreachable_lamp is lit
+        self.assertEquals(self.unreachable_lamp.light(), self.unreachable_lamp.on_description)
+        self.assertTrue(self.unreachable_lamp.is_lit)
+        # unreachable_lamp is already lit
+        self.assertEquals(self.unreachable_lamp.light(), "The object is already glowing brightly")
+        self.assertTrue(self.unreachable_lamp.is_lit)
+    def test_snuff_unreachable_lamp(self):
+        """User can snuff an unreachable lamp if standing on something."""
+        # unreachable_lamp is lit
+        room = FakeRoom(self.bed, self.chair)
+        self.unreachable_lamp._room = room
+        self.chair.has_user = True
+        self.unreachable_lamp.is_lit = True
+        self.assertEquals(self.unreachable_lamp.snuff(), "The glow fades into blackness.")
+        self.assertFalse(self.unreachable_lamp.is_lit)
+        # unreachable_lamp is off
+        self.assertEquals(self.unreachable_lamp.snuff(), "The object cannot get any darker.")
+        self.assertFalse(self.unreachable_lamp.is_lit)
 
     # test chair climability
     def test_chair_starts_off(self):
