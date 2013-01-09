@@ -68,7 +68,7 @@ class Lightable(object):
         return self.snuff()
 
 class UnreachableLight(Lightable):
-
+    # Unreachable object must have self._room defined
     def _is_standing(self, room):
         self.block = True
         if room:
@@ -100,12 +100,19 @@ class UnreachableLight(Lightable):
         return self.snuff()
 
 class Gettable(object):
-
+    # room can be an actual room or a Container object
     def get(self, room, inv):
         if self.gettable:
             if self in room.objects:
-                inv.append(self)
-                room.objects.remove(self)
+                if room.__class__.__name__ == 'Room':
+                    inv.append(self)
+                    room.objects.remove(self)
+                else: # room is a Container object
+                    if room.is_open:
+                        inv.append(self)
+                        room.objects.remove(self)
+                    else:
+                        return "The object is closed."
             elif self in inv:
                 return "You already have that object."
             else:
@@ -151,6 +158,20 @@ class Climbable(object):
     def get_down(self):
         return self.get_off()
 
+class Container(object):
+
+    # get is defined in Gettable (allows an object to be 'gotten' from a room or open object)
+
+    def put_in(self, object, inv):
+        if self.is_open:
+            self.objects.append(object)
+            inv.remove(object)
+            return "You place the object inside the open container."
+        else:
+            return "Try opening the container first."
+
+
+
 # Specific Objects
 
 class Bed(Object):
@@ -165,10 +186,11 @@ class Bed(Object):
     def climb(self):
         return self.stand()
 
-class Dresser(Object, Openable):
+class Dresser(Object, Openable, Container):
 
-    def __init__(self):
+    def __init__(self, *objs):
         self.is_open = False
+        self.objects = [obj for obj in objs]
         self.description = "A dresser made of blonde wood, with small brass handles."
         self.open_description = "The drawers hang open at a slight angle, indicating poor quality workmanship."
         self.closed_description = "All drawers are closed."

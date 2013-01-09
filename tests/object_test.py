@@ -3,7 +3,7 @@ from scaffolding import Object, Openable, Lightable, UnreachableLight, Gettable,
 
 import unittest
 
-class FakeRoom:
+class Room:
     def __init__(self, *objs):
         self.objects = [o for o in objs]
 
@@ -72,6 +72,35 @@ class TestObjects(unittest.TestCase):
         # dresser is already closed
         self.assertEquals(self.dresser.close(), "That object can't get any more closed.")
         self.assertFalse(self.dresser.is_open)
+    # test container aspect of dresser
+    def test_get_fails_when_object_is_closed(self):
+        "Trying to get an object from a closed dresser should return an error message"
+        room = Room(self.bed, self.dresser)
+        self.dresser.objects.append(self.chair)
+        inv = []
+        self.assertEquals(self.chair.get(self.dresser, inv), "The object is closed.")
+    def test_get_object_from_open_dresser(self):
+        """Trying to get an object from an open dresser should add the object to the user's inventory 
+        and remove it from the container"""
+        room = Room(self.bed, self.dresser)
+        self.dresser.objects.append(self.chair)
+        inv = []
+        self.dresser.open()
+        self.chair.get(self.dresser, inv)
+        self.assertEquals(self.dresser.objects, [])
+        self.assertEquals(inv, [self.chair])
+    def test_put_object_in_dresser(self):
+        "Put in should put an item in the dresser only when it is open, and return an error message otherwise"
+        room = Room(self.bed, self.dresser)
+        inv = [self.chair]
+        # dresser is closed
+        self.assertEquals(self.dresser.put_in(self.chair, inv), "Try opening the container first.")
+        # dresser is open
+        self.dresser.open()
+        self.dresser.put_in(self.chair, inv)
+        self.assertEquals(self.dresser.objects, [self.chair])
+        self.assertEquals(inv, [])
+
 
     # test lamp
     def test_lamp_starts_off(self):
@@ -138,7 +167,7 @@ class TestObjects(unittest.TestCase):
         self.assertTrue(self.unreachable_lamp.is_lit)
     def test_light_unreachable_lamp(self):
         """User can light an unreachable lamp if standing on something."""
-        room = FakeRoom(self.bed, self.chair)
+        room = Room(self.bed, self.chair)
         self.unreachable_lamp._room = room
         self.chair.has_user = True
         # unreachable_lamp is lit
@@ -150,7 +179,7 @@ class TestObjects(unittest.TestCase):
     def test_snuff_unreachable_lamp(self):
         """User can snuff an unreachable lamp if standing on something."""
         # unreachable_lamp is lit
-        room = FakeRoom(self.bed, self.chair)
+        room = Room(self.bed, self.chair)
         self.unreachable_lamp._room = room
         self.chair.has_user = True
         self.unreachable_lamp.is_lit = True
@@ -190,7 +219,7 @@ class TestObjects(unittest.TestCase):
     def test_get_chair(self):
         "Getting an object removes it from room.objects and adds it to the passed-in inventory"
         inv = []
-        room = FakeRoom(self.chair, self.bed)
+        room = Room(self.chair, self.bed)
         self.chair.get(room, inv)
         self.assertEquals(room.objects, [self.bed])
         self.assertEquals(inv, [self.chair])
@@ -198,21 +227,21 @@ class TestObjects(unittest.TestCase):
         """Getting an object that is already in user's inventory returns an error message, as does
             trying to get an object that does not exist."""
         inv = [self.chair]
-        room = FakeRoom(self.bed)
+        room = Room(self.bed)
         self.assertEquals(self.chair.get(room, inv), "You already have that object.")
         inv = []
         self.assertEquals(self.chair.get(room, inv), "That object does not exist.")
     def test_drop_chair(self):
         "Dropping an item removes it from user's inventory and places it in room.objects"
         inv = [self.chair]
-        room = FakeRoom(self.bed)
+        room = Room(self.bed)
         self.chair.drop(room, inv)
         self.assertEquals(inv, [])
         self.assertEquals(room.objects, [self.bed, self.chair])
     def test_drop_item_not_in_inventory(self):
         "Trying to drop an item that is not currently in the user's inventory returns an error message"
         inv = []
-        room = FakeRoom(self.bed)
+        room = Room(self.bed)
         self.assertEquals(self.chair.drop(room, inv), "That item is not currently in your inventory.")
         room.objects.append(self.chair)
         self.assertEquals(self.chair.drop(room, inv), "That item is not currently in your inventory.")
@@ -239,11 +268,11 @@ class TestObjects(unittest.TestCase):
         self.lamp.is_lit = False
         self.assertEquals(self.lamp.turn_off(), self.lamp.snuff())
 
-    # test gettable
+    # test gettable 
     def test_gettable_synonyms(self):
         "Calling chair.pickup = chair.get"
         inv = []
-        room = FakeRoom(self.chair, self.bed)
+        room = Room(self.chair, self.bed)
         self.chair.pickup(room, inv)
         self.assertEquals(room.objects, [self.bed])
 
