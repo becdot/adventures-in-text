@@ -1,4 +1,4 @@
-from scaffolding import Object, Openable, Lightable, UnreachableLight, Gettable, \
+from scaffolding import Object, Openable, Lightable, UnreachableLight, Gettable, Climbable, Container, \
                         Bed, Dresser, Lamp, UnreachableLamp, Chair
 
 import unittest
