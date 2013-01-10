@@ -5,3 +5,4 @@ To do
 - have dynamic container descriptions so that they can return something about the objects inside them
 - have global room and inventory
   - this will also make it easier to use object.get(), because the room/container and inventory won't have to be passed in explicitly
+- how to change rooms -- have a LOCATION variable?

@@ -10,6 +10,12 @@ class Room(object):
     def look(self):
         return self.description
 
+    def move(self, direction):
+        if direction in self.exits:
+            return self.exits[direction]
+        else:
+            return "You cannot go that way."
+
 class Object(object):
     def __str__(self):
         return self.description
@@ -243,5 +249,3 @@ class Chair(Object, Climbable, Gettable):
 #            and a small dresser in the corner.', exits={'west': 'Closet'})
 # Closet = Room(name='Closet', objects=[Chair], description='Significantly colder than the bedroom, 
 #            the closet has a slanted roof that only makes it feel more cramped.', exits: {'east': 'Bedroom'})
-#
-# Climbable, Unreachable, Container
