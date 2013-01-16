@@ -184,6 +184,7 @@ class Bed(Object):
 
     def __init__(self):
         self.description = "A handsome four-poster with a patchwork quilt and gauzy maroon canopy."
+        self.id = "bed"
 
     # TODO make this not hardcoded?
     def stand(self):
@@ -195,6 +196,7 @@ class Bed(Object):
 class Dresser(Object, Openable, Container):
 
     def __init__(self, *objs):
+        self.id = "dresser"
         self.is_open = False
         self.objects = [obj for obj in objs]
         self.description = "A dresser made of blonde wood, with small brass handles."
@@ -209,6 +211,7 @@ class Dresser(Object, Openable, Container):
 
 class Lamp(Object, Lightable):
     def __init__(self):
+        self.id = "lamp"
         self.is_lit = False
         self.description = "The lamp is set high on the wall, its tawdry plaid shade almost out of reach."
         self.on_description = "The object throws a soft light, illuminating the room."
@@ -223,6 +226,7 @@ class Lamp(Object, Lightable):
 class UnreachableLamp(Object, UnreachableLight):
 
     def __init__(self, room=None):
+        self.id = "unreachable_lamp"
         self._room = room
         self.block = True
         self.is_lit = False
@@ -239,6 +243,7 @@ class UnreachableLamp(Object, UnreachableLight):
 
 class Chair(Object, Climbable, Gettable):
     def __init__(self):
+        self.id = "chair"
         self.has_user = False
         self.gettable = True
         self.description = "A sturdy wooden chair with dark wooden slats."

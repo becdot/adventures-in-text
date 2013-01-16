@@ -1,17 +1,43 @@
 {% extends "game_index.html" %}
 
+{% block room_details %}
+    {% if room %}
+        <h3>{{room.name}}</h3>
+        <p>{{room.description}}</p>
+        <ul>
+        {% for item in room.objects %}
+            <li>{{item.id}}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock room_details %}
+
+{% block inventory_list %}
+    {% if inventory %}
+        <h4>Inventory</h4>
+        <ul>
+        {% for item in inventory %}
+            <li>{{item.id}}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>Inventory is Empty</p>
+    {% endif %}
+{% endblock inventory_list %}
+
+{% block messages %}
+    {% if message %}
+        <p>{{message}}</p>
+    {% endif %}
+{% endblock messages %}
+
 {% block action_form %}
     <div id="action_input">
         <label for="action">Action:</label>
-        <input type="text" id="action" name="action" />
-    </div>
-
-    <div class="hidden_form_inputs">
-        <input type="hidden", name="room" />
-        <input type="hidden", name="inv" />
+        <input type="text" id="action" name="action" autofocus="true"/>
     </div>
 
     <div class="submit">
-        <input name="submit" type="submit"9/>
+        <input name="submit" type="submit"/>
     </div>
 {% endblock action_form %}

@@ -9,4 +9,4 @@ To do
 - how to change rooms -- have a LOCATION variable?
 - better way to set room exits
 - calling method on an object that does not have it (e.g. calling bed.get()) returns a custom error message instead of an attribute error
-- Bet
+- Better error handling so that the game doesn't exit when something is called incorrectly

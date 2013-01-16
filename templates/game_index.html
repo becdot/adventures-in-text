@@ -9,17 +9,22 @@
 
   <body>
     <div class="room">
-        <h1 id="room_title">Room</h1>
-        <h3 id="room_description">Description</h3>
+      {% block room_details %}
+      {% endblock room_details %}
     </div>
 
-    <div class="inv">
-        <ul>
-        </ul>
+    <div class="inventory">
+      {% block inventory_list %}
+      {% endblock inventory_list %}
+    </div>
+
+    <div class="message">
+      {% block messages %}
+      {% endblock messages %}
     </div>
 
     <div class="action_form">
-        <form action="/game" method="post" name="action_form"> 
+        <form action="/" method="post" name="action_form"> 
             {% block action_form %}
             {% endblock action_form %} 
         </form>

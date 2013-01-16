@@ -1,10 +1,6 @@
 from scaffolding import Room, Object, \
                         Bed, Dresser, UnreachableLamp, Chair
 
-global inventory
-inventory = []
-global location
-
 bed = Bed()
 lamp = UnreachableLamp()
 dresser = Dresser()
@@ -20,26 +16,5 @@ Bedroom.exits['west'] = Closet
 Closet.exits['east'] = Bedroom
 lamp._room = Bedroom
 
-location = Bedroom
 
-# GLOBAL METHODS
-def get(obj):
-    return obj.get(location, inventory)
-
-def drop(obj):
-    return obj.drop(location, inventory)
-
-def move(direction):
-    new_location = location.move(direction)
-    if isinstance(new_location, Room):
-        global location 
-        location = new_location
-        return location.look()
-    else:   
-        return new_location
-
-def look(obj=None):
-    if obj:
-        return obj.look()
-    else:
-        return location.look()
+game = {'rooms': [Bedroom, Closet], 'inv': [], 'location': Bedroom}
