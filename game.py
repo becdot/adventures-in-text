@@ -1,5 +1,5 @@
 from scaffolding import Room, Object, \
-                        Bed, Dresser, Lamp, UnreachableLamp, Chair
+                        Bed, Dresser, UnreachableLamp, Chair
 
 global inventory
 inventory = []
@@ -43,7 +43,3 @@ def look(obj=None):
         return obj.look()
     else:
         return location.look()
-
-
-
-import pdb;pdb.set_trace()

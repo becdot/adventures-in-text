@@ -1,0 +1,17 @@
+{% extends "game_index.html" %}
+
+{% block action_form %}
+    <div id="action_input">
+        <label for="action">Action:</label>
+        <input type="text" id="action" name="action" />
+    </div>
+
+    <div class="hidden_form_inputs">
+        <input type="hidden", name="room" />
+        <input type="hidden", name="inv" />
+    </div>
+
+    <div class="submit">
+        <input name="submit" type="submit"9/>
+    </div>
+{% endblock action_form %}
