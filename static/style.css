@@ -1,5 +1,42 @@
-.action_form {
+.room h3{
+    font-size: 150%;
+}
+.room h4{
     margin: 0;
+}
+
+.inventory {
+    float: left;
+    margin: 2em 0 2em 0;
+    width: 400px;
+    padding: 1em;
+    border: 1px solid #CCC;
+    border-radius: 1em;   
+}
+.inventory h4,ul,li{
+    margin: 0;
+}
+
+.exits {
+    float: left;
+    margin: 2em 0 2em 10%;
+    width: 400px;
+    padding: 1em;
+    border: 1px solid #CCC;
+    border-radius: 1em;  
+}
+.exits h4,ul,li{
+    margin: 0;
+}
+
+.message {
+    clear: both;
+    font-weight: bold;
+}
+
+.action_form {
+    clear: both;
+    margin: 1em 0 0 0;
     width: 400px;
     padding: 1em;
     border: 1px solid #CCC;

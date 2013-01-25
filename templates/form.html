@@ -1,29 +1,43 @@
 {% extends "game_index.html" %}
 
 {% block room_details %}
-    {% if room %}
-        <h3>{{room.name}}</h3>
-        <p>{{room.description}}</p>
-        <ul>
+    <h3>{{room.name}}</h3>
+    <p>{{room.description}}</p>
+    <h4>Items</h4>
+    <ul>
+    {% if room.objects %}
         {% for item in room.objects %}
             <li>{{item.id}}</li>
         {% endfor %}
-        </ul>
+    {% else %}
+        <li>Empty</li>
     {% endif %}
+    </ul>
 {% endblock room_details %}
 
 {% block inventory_list %}
-    {% if inventory %}
         <h4>Inventory</h4>
         <ul>
-        {% for item in inventory %}
-            <li>{{item.id}}</li>
+        {% if inventory %}
+            {% for item in inventory %}
+                <li>{{item.id}}</li>
+            {% endfor %}
+        {% else %}
+            <li>Empty</li>
+        {% endif %}
+        </ul>
+{% endblock inventory_list %}
+
+{% block exits %}
+    {% if exits %}
+        <h4>Exits</h4>
+        <ul>
+        {% for item in exits %}
+            <li>{{item}}</li>
         {% endfor %}
         </ul>
-    {% else %}
-        <p>Inventory is Empty</p>
     {% endif %}
-{% endblock inventory_list %}
+{% endblock exits %}
 
 {% block messages %}
     {% if message %}

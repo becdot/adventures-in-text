@@ -4,9 +4,7 @@ To do
 - put object attributes as default arguments so that they can be customized more easily
 - have dynamic container and room descriptions so that they can return something about the objects inside them
     - Container.look_in returns container.objects
-- have global room and inventory
-  - this will also make it easier to use object.get(), because the room/container and inventory won't have to be passed in explicitly
-- how to change rooms -- have a LOCATION variable?
+
 - better way to set room exits
 - calling method on an object that does not have it (e.g. calling bed.get()) returns a custom error message instead of an attribute error
 - Better error handling so that the game doesn't exit when something is called incorrectly

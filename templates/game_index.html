@@ -13,18 +13,23 @@
       {% endblock room_details %}
     </div>
 
-    <div class="inventory">
-      {% block inventory_list %}
-      {% endblock inventory_list %}
-    </div>
-
     <div class="message">
       {% block messages %}
       {% endblock messages %}
     </div>
 
+    <div class="inventory">
+      {% block inventory_list %}
+      {% endblock inventory_list %}
+    </div>
+
+    <div class="exits">
+      {% block exits %}
+      {% endblock exits %}
+    </div>
+
     <div class="action_form">
-        <form action="/" method="post" name="action_form"> 
+        <form action="/" method="post" name="action_form" autocomplete="off"> 
             {% block action_form %}
             {% endblock action_form %} 
         </form>
