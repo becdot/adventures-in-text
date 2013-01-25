@@ -1,5 +1,6 @@
-from scaffolding import Object, Openable, Lightable, UnreachableLight, Gettable, Climbable, Container, \
-                        Bed, Dresser, Lamp, UnreachableLamp, Chair
+from scaffolding import Object
+from properties import Openable, Lightable, UnreachableLight, Gettable, Climbable, Container
+from objects import Bed, Dresser, Lamp, UnreachableLamp, Chair
 
 import unittest
 

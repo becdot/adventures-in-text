@@ -1,6 +1,7 @@
-from scaffolding import Room, Object, \
-                        Openable, Lightable, \
-                        Bed, Dresser, Lamp
+from scaffolding import Room, Object
+from properties import Openable, Lightable
+from objects import Bed, Dresser, Lamp
+                        
 
 import unittest
 

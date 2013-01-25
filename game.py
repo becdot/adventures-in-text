@@ -1,5 +1,5 @@
-from scaffolding import Room, Object, \
-                        Bed, Dresser, UnreachableLamp, Chair
+from scaffolding import Room, Object
+from objects import Bed, Dresser, UnreachableLamp, Chair
 
 bed = Bed()
 lamp = UnreachableLamp()
