@@ -1,11 +1,4 @@
-from scaffolding import Room
-
-def valid_verb(verb, obj):
-    "Checks whether the verb is a valid method for the object"
-    verbs = [method for method in dir(obj) if not method.startswith('_')]
-    if verb in verbs:
-        return True
-    return False
+import scaffolding # sets base verbs on Object class
 
 def play_game(game, action):
     """Takes a game dictionary and an action and attempts to call the action.  
@@ -25,7 +18,7 @@ def play_game(game, action):
         message = obj.drop(location, inventory)
     elif verb == 'move':
         new_location = location.move(obj)
-        if isinstance(new_location, Room): # if moving to a room, update location and print the new room description
+        if isinstance(new_location, scaffolding.Room): # if moving to a room, update location and print the new room description
             game['location'] = new_location
         else:   
             message = new_location # otherwise return error string (location does not exist)
@@ -37,10 +30,7 @@ def play_game(game, action):
 
     # object-specific methods
     else:
-        if valid_verb(verb, obj):
-            message = getattr(obj, verb)()
-        else:
-            message = "That is not a valid action."
+        message = getattr(obj, verb)()
 
     return (game, message)
 

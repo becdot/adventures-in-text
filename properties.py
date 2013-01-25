@@ -83,23 +83,20 @@ class UnreachableLight(Lightable):
 class Gettable(object):
     # room can be an actual room or a Container object
     def get(self, room, inv):
-        if self.gettable:
-            if self in room.objects:
-                if room.__class__.__name__ == 'Room':
+        if self in room.objects:
+            if room.__class__.__name__ == 'Room':
+                inv.append(self)
+                room.objects.remove(self)
+            else: # room is a Container object
+                if room.is_open:
                     inv.append(self)
                     room.objects.remove(self)
-                else: # room is a Container object
-                    if room.is_open:
-                        inv.append(self)
-                        room.objects.remove(self)
-                    else:
-                        return "The object is closed."
-            elif self in inv:
-                return "You already have that object."
-            else:
-                return "That object does not exist."
+                else:
+                    return "The object is closed."
+        elif self in inv:
+            return "You already have that object."
         else:
-            return "You cannot pick up that object."
+            return "That object does not exist."
     def pickup(self, room, inv):
         return self.get(room, inv)
 
@@ -111,9 +108,8 @@ class Gettable(object):
             return "That item is not currently in your inventory."
 
 class Climbable(object):
-    
-    # climb and stand are multipurpose (i.e. calling climb the first time will set has_user to True, 
-    # while calling climb again will set has_user to False)
+    # climb and stand are multipurpose 
+    #(i.e. calling climb once will set has_user to True, while calling climb again will set has_user to False)
     def climb(self):
         if self.has_user:
             self.has_user = False
@@ -123,6 +119,7 @@ class Climbable(object):
             return "You clamber onto the object."
     def stand(self):
         return self.climb()
+
     # get_on, get_off, and get_down are single-purpose
     def get_on(self):
         if self.has_user:

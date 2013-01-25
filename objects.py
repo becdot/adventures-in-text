@@ -16,7 +16,7 @@ class Bed(Object):
     def climb(self):
         return self.stand()
 
-class Dresser(Object, Openable, Container):
+class Dresser(Openable, Container, Object):
 
     def __init__(self, *objs):
         self.id = "dresser"
@@ -32,7 +32,7 @@ class Dresser(Object, Openable, Container):
         else:
             return '  '.join([self.description, self.closed_description])
 
-class Lamp(Object, Lightable):
+class Lamp(Lightable, Object):
     def __init__(self):
         self.id = "lamp"
         self.is_lit = False
@@ -46,7 +46,7 @@ class Lamp(Object, Lightable):
         else:
             return '  '.join([self.description, self.off_description])
 
-class UnreachableLamp(Object, UnreachableLight):
+class UnreachableLamp(UnreachableLight, Object):
 
     def __init__(self, room=None):
         self.id = "unreachable_lamp"
@@ -64,9 +64,8 @@ class UnreachableLamp(Object, UnreachableLight):
         else:
             return '  '.join([self.description, self.off_description])
 
-class Chair(Object, Climbable, Gettable):
+class Chair(Climbable, Gettable, Object):
     def __init__(self):
         self.id = "chair"
         self.has_user = False
-        self.gettable = True
         self.description = "A sturdy wooden chair with dark wooden slats."
