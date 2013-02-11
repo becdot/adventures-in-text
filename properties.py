@@ -156,7 +156,7 @@ class Container(object):
             elif len(self.objects) == 1:
                 return "This object has a {} inside.".format(self.objects[0])
             else:
-                return ""
+                return "This object is empty."
         else:
             return "You cannot look inside a closed object."
 

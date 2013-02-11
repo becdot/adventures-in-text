@@ -12,10 +12,10 @@ class TestMiniGame(unittest.TestCase):
         chair = closet.objects[0]
 
         # go west
-        update = play_game(base, 'move west')[0]
+        update = play_game(base, 'west')[0]
         self.assertEquals(update['location'], closet)
         # go north (impossible) should not change location
-        update = play_game(update, 'move north')[0]
+        update = play_game(update, 'north')[0]
         self.assertEquals(update['location'], closet)
         # picking up chair should add it to inventory
         update = play_game(update, 'get chair')[0]
@@ -23,7 +23,7 @@ class TestMiniGame(unittest.TestCase):
         # and remove it from closet.objects
         self.assertEquals(closet.objects, [])
         # going east again should change location to the bedroom
-        update = play_game(update, 'move east')[0]
+        update = play_game(update, 'east')[0]
         self.assertEquals(update['location'], bedroom)
         # dropping the chair should remove it from inventory
         update = play_game(update, 'drop chair')[0]

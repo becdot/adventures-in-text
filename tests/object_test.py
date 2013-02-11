@@ -49,7 +49,8 @@ class TestObjects(unittest.TestCase):
             and returns the description + open_description only when self.objects is empty"""
         # self.objects = []
         self.dresser.is_open = True
-        self.assertEquals(str(self.dresser), self.dresser.description + '  ' + self.dresser.open_description)
+        self.assertEquals(str(self.dresser),\
+        self.dresser.description + '  ' + self.dresser.open_description + '  This object is empty.')
         # self.objects = ["key"]
         self.dresser.objects = ["key"]
         self.assertEquals(str(self.dresser),\
@@ -110,6 +111,19 @@ class TestObjects(unittest.TestCase):
         self.dresser.put_in(self.chair, inv)
         self.assertEquals(self.dresser.objects, [self.chair])
         self.assertEquals(inv, [])
+    def test_look_in_dresser(self):
+        "Look_in should return the list of contained objects if the dresser is open, and an error otherwise"
+        # self.is_open = False
+        self.assertEquals(self.dresser.look_in(), "You cannot look inside a closed object.")
+        # self.objects = []
+        self.dresser.is_open = True
+        self.assertEquals(self.dresser.look_in(), "This object is empty.")
+        # self.objects = ["key"]
+        self.dresser.objects = ["key"]
+        self.assertEquals(self.dresser.look_in(), "This object has a key inside.")
+        # self.objects = ["sword", "letter", "key"]
+        self.dresser.objects = ["sword", "letter", "key"]
+        self.assertEquals(self.dresser.look_in(), "This object contains: sword, letter, key.")
 
 
     # test lamp

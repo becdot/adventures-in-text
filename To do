@@ -4,5 +4,7 @@ To do
 - put object attributes as default arguments so that they can be customized more easily
 - have dynamic container and room descriptions so that they can return something about the objects inside them
     - Container.look_in returns container.objects
-
 - better way to set room exits
+- have grammar dealt with in its own function?  
+  - have a function that splits up action and deals with it appropriately.
+- better grammar for underscore actions (e.g. look_in -- be able to say "look in <object>")

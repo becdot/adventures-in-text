@@ -27,7 +27,7 @@ class Object(object):
 # properties can override these base verbs
 
 VERBS = ['open', 'close', 'pull', 'push', 'shut', 'light', 'turn_on', 'snuff', 'turn_off', 'get', 'pickup', 'drop', 'climb',\
-        'stand', 'get_on', 'get_off', 'get_down', 'put_in']
+        'stand', 'get_on', 'get_off', 'get_down', 'put_in', 'look_in']
 
 def set_methods(verbs):
     def make_func(verb):
