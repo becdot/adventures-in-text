@@ -28,7 +28,10 @@ class Dresser(Openable, Container, Object):
 
     def __str__(self):
         if self.is_open:
-            return '  '.join([self.description, self.open_description])
+            base = '  '.join([self.description, self.open_description])
+            if self.look_in():
+                return base + '  ' + self.look_in()
+            return base
         else:
             return '  '.join([self.description, self.closed_description])
 

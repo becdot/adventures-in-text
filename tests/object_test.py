@@ -41,14 +41,23 @@ class TestObjects(unittest.TestCase):
     def test_dresser_starts_closed(self):
         "dresser.is_open defaults to false"
         self.assertFalse(self.dresser.is_open)
-    def test_dresser_descriptions(self):
-        """dresser returns the description + closed_description when dresser.is_open is False
-         and description + open_description when dresser.is_open is True"""
-        # closed description
+    def test_closed_dresser_description(self):
+        "dresser returns the description + closed_description when it is closed."
         self.assertEquals(str(self.dresser), self.dresser.description + '  ' + self.dresser.closed_description)
-        # open description
+    def test_open_dresser_description(self):
+        """dresser returns the description + open_description + a list of containing objects when self.objects is not empty
+            and returns the description + open_description only when self.objects is empty"""
+        # self.objects = []
         self.dresser.is_open = True
         self.assertEquals(str(self.dresser), self.dresser.description + '  ' + self.dresser.open_description)
+        # self.objects = ["key"]
+        self.dresser.objects = ["key"]
+        self.assertEquals(str(self.dresser),\
+            self.dresser.description + '  ' + self.dresser.open_description + '  ' + "This object has a key inside.")
+        # self.objects = ["sword", "letter", "key"]
+        self.dresser.objects = ["sword", "letter", "key"]
+        self.assertEquals(str(self.dresser),\
+            self.dresser.description + '  ' + self.dresser.open_description + '  ' + "This object contains: sword, letter, key.")
     def test_dresser_look(self):
         "dresser.look() returns the dresser.description + open/closed description (based on dresser.is_open)"
         self.assertEquals(self.dresser.look(), str(self.dresser))

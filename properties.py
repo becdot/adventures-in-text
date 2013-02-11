@@ -148,3 +148,15 @@ class Container(object):
         else:
             return "Try opening the container first."
 
+    def look_in(self):
+        if self.is_open:
+            if len(self.objects) > 1:
+                description = "This object contains: " + "{}, " * (len(self.objects) - 1) + "{}."
+                return description.format(*self.objects)
+            elif len(self.objects) == 1:
+                return "This object has a {} inside.".format(self.objects[0])
+            else:
+                return ""
+        else:
+            return "You cannot look inside a closed object."
+
