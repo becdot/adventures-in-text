@@ -1,2 +1,3 @@
 ve
-playing_around
+*.pyc
+playing_around/flaskr

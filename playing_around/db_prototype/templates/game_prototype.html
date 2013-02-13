@@ -1,0 +1,33 @@
+<!doctype html>
+
+<head>
+    <title>Action List</title>
+</head>
+
+<body>
+    <h1>Make an Action</h1>
+
+    <div class=actionform>
+        <form action="/" method="post" name="action_form" autocomplete="off"> 
+            <div id="action_input">
+                <label for="action">Action:</label>
+                <input type="text" name="action" autofocus="true"/>
+            </div>
+            <div class="submit">
+                <input name="submit" type="submit"/>
+            </div>
+        </form>
+    </div>
+
+    <div class=actionlist>
+        {% for action in actions %}
+            <h3>{{action}}</h3>
+        {% endfor %}
+    </div>
+
+    <div class=newgame>
+        <a href='/newgame'>New Game</a>
+    </div>
+
+</body>
+</html>
