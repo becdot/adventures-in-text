@@ -55,3 +55,13 @@
         <input name="submit" type="submit"/>
     </div>
 {% endblock action_form %}
+
+{% block flashed_messages %}
+    {% with flash = get_flashed_messages() %}
+        {% if flash %}
+        <ul class=flashes>
+            <li>{{ flash[0]}}</li>
+        </ul>
+        {% endif %}
+    {% endwith %}
+{% endblock flashed_messages %}

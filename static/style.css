@@ -5,6 +5,10 @@
     margin: 0;
 }
 
+.room {
+    width: 80%;
+}
+
 .inventory {
     float: left;
     margin: 2em 0 2em 0;
@@ -30,6 +34,7 @@
 }
 
 .message {
+    width: 80%;
     clear: both;
     font-weight: bold;
 }
@@ -42,6 +47,25 @@
     border: 1px solid #CCC;
     border-radius: 1em;
 }
+
+.newgame {
+    float: right;
+    border: 1px solid #CCC;
+    border-radius: 1em;
+    width: 200px;
+    text-align: center;
+    margin: 0 50px 0 0;
+}
+
+.newgame a {
+    text-decoration: none;
+    font-size: large;
+}
+
+.flashed-messages {
+    padding-top: 20px;
+}
+
 label {
     display: inline-block;
     width: 90px;

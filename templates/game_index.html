@@ -13,6 +13,10 @@
       {% endblock room_details %}
     </div>
 
+    <div class="newgame">
+        <a href='/newgame'>New Game</a>
+    </div>
+
     <div class="message">
       {% block messages %}
       {% endblock messages %}
@@ -29,10 +33,17 @@
     </div>
 
     <div class="action_form">
-        <form action="/" method="post" name="action_form" autocomplete="off"> 
+      <form action="/" method="post" name="action_form" autocomplete="off"> 
             {% block action_form %}
             {% endblock action_form %} 
-        </form>
+      </form>
+    </div>
+
+    <div class="flashed-messages">
+      {% block flashed_messages %}
+      {% endblock flashed_messages %}
+    </div>
+
   </body>
 
 </html>
