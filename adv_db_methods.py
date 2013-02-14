@@ -24,7 +24,7 @@ def init_db():
 
 def save_game(user_id, game):
     pickled = dumps(game)
-    g.db.execute('UPDATE game SET data VALUES (?) WHERE id = (?)', [pickled, user_id])
+    g.db.execute('UPDATE game SET data = (?) WHERE id = (?)', [pickled, user_id])
     assert unicode(pickled) == g.db.execute('SELECT data FROM game WHERE id = (?)', [user_id]).fetchall()[0][0]
     g.db.commit()
 
@@ -42,49 +42,10 @@ def delete_game(user_id):
     print "game deleted successfully"
     g.db.commit()
 
-def create_user():
-    g.db.execute('INSERT INTO game (data) VALUES (NULL)')
+def create_user(blank_game):
+    pickled = dumps(blank_game)
+    g.db.execute('INSERT INTO game (data) VALUES (?)', [pickled])
     g.db.commit()
     flash('New user successfully created')
     user_id = g.db.execute('SELECT id FROM game ORDER BY id DESC').fetchall()[0][0]
     return user_id
-
-
-
-
-
-
-
-# def update_object_location(obj, location):
-#     "update object's location in objects table"
-
-#     name = obj.unique_name
-#     g.db.execute('UPDATE objects SET location VALUES (?) WHERE name = (?)', [location, name])
-#     g.db.commit()
-
-# def update_object_data(obj):
-
-#     data = dumps(obj)
-#     g.db.execute('UPDATE objects SET data VALUES (?) WHERE name = (?)', [data, name])
-#     g.db.commit()
-
-# def update_user_location(location):
-#     "update user's location in users table"
-
-#     name = location.unique_name
-#     user_id = session['id']
-#     g.db.execute('UPDATE users SET location VALUES (?) WHERE id = (?)', [name, user_id])
-#     assert name == g.db.execute('SELECT location FROM users WHERE id = (?)').fetchall()[0][0]
-#     g.db.commit()
-
-# def update_user_message(message):
-#     "update user message in users table"
-
-#     user_id = session['id']
-#     g.db.execute('UPDATE users SET message VALUES (?) WHERE id = (?)', [message, user_id])
-
-# def save_game(game_dict, msg):
-#     pass
-
-
-

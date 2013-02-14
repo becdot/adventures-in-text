@@ -15,9 +15,10 @@ def moving(action, location):
     return False
 
 
-def play_game(game, action):
+def play_game(old_game, action):
     """Takes a game dictionary and an action and attempts to call the action.  
     Returns a tuple of the updated game dictionary and any messages."""
+    game = old_game
     location = game['location']
     inventory = game['inv']
     message = None

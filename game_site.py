@@ -20,17 +20,19 @@ def index():
             if session['id']: # if a session is already running, try to load the user's previous game
                 print "session", session['id'], "is already initialized"
                 loaded = get_game(session['id'])
-                if loaded: # if there is a game, load it
-                    return render_template('form.html', room=loaded['location'], \
-                                inventory=loaded['inv'], exits=loaded['location'].exits)
-                else: # otherwise, just load a new game
-                    return render_template('form.html', room=initial['location'], 
-                                inventory=initial['inv'], exits=initial['location'].exits)
+                return render_template('form.html', room=loaded['location'], \
+                            inventory=loaded['inv'], exits=loaded['location'].exits)
         except KeyError: # otherwise, load a new game
+            print "loading a totally new game"
+            session['id'] = create_user(initial)
+            print "new session id created:", session['id']
             return render_template('form.html', room=initial['location'], inventory=initial['inv'], exits=initial['location'].exits)
     elif request.method == 'POST':
         action = request.form['action']
-        updated_game, msg = play_game(initial, action)
+        loaded = get_game(session['id'])
+        updated_game, msg = play_game(loaded, action)
+        save_game(session['id'], updated_game)
+        print "saving game for user", session['id']
         return render_template('form.html', room=updated_game['location'], inventory=updated_game['inv'], \
                                 exits=updated_game['location'].exits, message=msg)
 
@@ -38,9 +40,8 @@ def index():
 def newgame():
     old_id = session['id']
     delete_game(old_id)
-    new_id = create_user()
-    session['id'] = new_id
-    print "new id is:", new_id
+    del session['id']
+    print "user", old_id, "deleted"
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
