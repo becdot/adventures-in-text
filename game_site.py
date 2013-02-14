@@ -29,7 +29,8 @@ def index():
             return render_template('form.html', room=initial['location'], inventory=initial['inv'], exits=initial['location'].exits)
     elif request.method == 'POST':
         action = request.form['action']
-        loaded = get_game(session['id'])
+        user_id = session['id']
+        loaded = get_game(user_id)
         updated_game, msg = play_game(loaded, action)
         save_game(session['id'], updated_game)
         print "saving game for user", session['id']

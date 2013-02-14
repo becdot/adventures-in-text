@@ -32,7 +32,6 @@ def get_game(user_id):
     cur = g.db.execute('SELECT data FROM game WHERE id = (?)', [user_id])
     data = cur.fetchall()[0][0]
     if data:
-        print "game data:", data
         return loads(data)
     return None
 
