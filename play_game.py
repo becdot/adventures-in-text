@@ -39,21 +39,21 @@ def play_game(old_game, action):
         else:   
             message = new_location # otherwise return error string (location does not exist)
     elif verb == 'get':
-        message = obj.get(location, inventory)
+        message = obj.get(location=location, inventory=inventory)
     elif verb == 'drop':
-        message = obj.drop(location, inventory)
+        message = obj.drop(location=location, inventory=inventory)
     elif verb == 'look':
         if obj == 'room' or obj == None:
             message = location.look()
         else:
-            message = getattr(obj, verb)()
+            message = getattr(obj, verb)(location=location, inventory=inventory)
     elif verb == 'climb':
-        message = obj.climb(inventory)
+        message = obj.climb(location=location, inventory=inventory)
 
     # object-specific methods
     else:
         try:
-            message = getattr(obj, verb)()
+            message = getattr(obj, verb)(location=location, inventory=inventory)
         except AttributeError:
             message = "That is not a valid action."
 

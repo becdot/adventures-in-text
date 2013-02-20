@@ -37,7 +37,7 @@ VERBS = ['open', 'close', 'pull', 'push', 'shut', 'light', 'turn_on', 'snuff', '
 
 def set_methods(verbs):
     def make_func(verb):
-        def verbage(self, *args):
+        def verbage(self, *args, **kwargs):
             return "You can't {} this object.".format(verb)
         return verbage
 

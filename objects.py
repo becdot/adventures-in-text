@@ -11,11 +11,11 @@ class Bed(Object):
         self.name = "bed"
 
     # TODO make this not hardcoded?
-    def climb(self, *args):
+    def climb(self, **kwargs):
         return "Didn't your mother teach you anything?"
 
-    def stand(self):
-        return self.climb()
+    def stand(self, **kwargs):
+        return self.climb(**kwargs)
 
 class Dresser(Openable, Container, Object):
 
