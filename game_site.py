@@ -26,7 +26,6 @@ def index():
             print "loading a totally new game"
             session['id'] = create_user(initial)
             print "new session id created:", session['id']
-            print "new game's objects", [o.name for o in initial['location'].objects]
             return render_template('form.html', room=initial['location'], inventory=initial['inv'], exits=initial['location'].exits)
     elif request.method == 'POST':
         action = request.form['action']

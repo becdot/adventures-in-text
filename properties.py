@@ -110,18 +110,22 @@ class Gettable(object):
 class Climbable(object):
     # climb and stand are multipurpose 
     #(i.e. calling climb once will set has_user to True, while calling climb again will set has_user to False)
-    def climb(self):
+    def climb(self, inventory):
+        if self in inventory:
+            return "You cannot climb that while still holding it."
         if self.has_user:
             self.has_user = False
             return "You step carefully back down."
         else:
             self.has_user = True
             return "You clamber onto the object."
-    def stand(self):
-        return self.climb()
+    def stand(self, inv):
+        return self.climb(inv)
 
     # get_on, get_off, and get_down are single-purpose
-    def get_on(self):
+    def get_on(self, inventory):
+        if self in inventory:
+            return "You cannot climb that while still holding it."
         if self.has_user:
             return "You are already standing on that object!"
         else:

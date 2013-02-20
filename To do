@@ -1,8 +1,5 @@
 To do
 
-- standing/climbing
-    - user should not be able to leave room if standing on something
-    - shouldn't be able to climb an object in your inventory
 - put object attributes as default arguments so that they can be customized more easily?
 - have dynamic container and room descriptions so that they can return something about the objects inside them
     - Container.look_in returns container.objects

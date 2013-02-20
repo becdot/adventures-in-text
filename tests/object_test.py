@@ -224,20 +224,28 @@ class TestObjects(unittest.TestCase):
         """Climbing a chair that does not already have a user standing on it sets has_user to True
             Otherwise, climbing sets has_user to False (climb is multipurpose)."""
         # chair is unoccupied
-        self.assertEquals(self.chair.climb(), "You clamber onto the object.")
+        inv = []
+        self.assertEquals(self.chair.climb(inv), "You clamber onto the object.")
         self.assertTrue(self.chair.has_user)
-        self.assertEquals(self.chair.climb(), "You step carefully back down.")
+        self.assertEquals(self.chair.climb(inv), "You step carefully back down.")
         self.assertFalse(self.chair.has_user)
     def test_get_on_and_off_chair(self):
         "Get_on and get_off are single-purpose (i.e. a user cannot use get_on to get off an object)"
+        inv = []
         self.assertEquals(self.chair.get_off(), "You are not standing on anything.")
         self.assertFalse(self.chair.has_user)
-        self.assertEquals(self.chair.get_on(), "You clamber onto the object.")
+        self.assertEquals(self.chair.get_on(inv), "You clamber onto the object.")
         self.assertTrue(self.chair.has_user)
-        self.assertEquals(self.chair.get_on(), "You are already standing on that object!")
+        self.assertEquals(self.chair.get_on(inv), "You are already standing on that object!")
         self.assertTrue(self.chair.has_user)
         self.assertEquals(self.chair.get_off(), "You step carefully back down.")
         self.assertFalse(self.chair.has_user)
+    def test_climb_when_chair_in_inventory(self):
+        "User can only climb when the object is not in their inventory"
+        inv = [self.chair]
+        self.assertEquals(self.chair.climb(inv), 'You cannot climb that while still holding it.')
+        inv = []
+        self.assertEquals(self.chair.climb(inv), 'You clamber onto the object.')
 
     # test chair getability
     def test_get_chair(self):
@@ -304,12 +312,13 @@ class TestObjects(unittest.TestCase):
     def test_climbable_synonyms(self):
         "Calling chair.stand/get_on/get_off/get_down calls chair.climb"
         # stand is multipurpose (i.e. can be used to both get on and get off a climbable object)
-        self.chair.stand()
+        inv = []
+        self.chair.stand(inv)
         self.assertTrue(self.chair.has_user)
-        self.chair.stand()
+        self.chair.stand(inv)
         self.assertFalse(self.chair.has_user)
         # get_on, get_off, and get_down are single purpose
-        self.chair.get_on()
+        self.chair.get_on(inv)
         self.assertTrue(self.chair.has_user)
         self.chair.get_off()
         self.assertFalse(self.chair.has_user)

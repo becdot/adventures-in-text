@@ -33,7 +33,6 @@ def play_game(old_game, action):
 
     # global methods that need access to location and/or inventory
     new_location = moving(verb, location, inventory)
-    print "new location is", new_location
     if new_location:
         if isinstance(new_location, scaffolding.Room): # if moving to a room, update location and print the new room description
             game['location'] = new_location
@@ -48,6 +47,8 @@ def play_game(old_game, action):
             message = location.look()
         else:
             message = getattr(obj, verb)()
+    elif verb == 'climb':
+        message = obj.climb(inventory)
 
     # object-specific methods
     else:
