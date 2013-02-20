@@ -6,8 +6,9 @@ from properties import Openable, Lightable, UnreachableLight, Gettable, Climbabl
 class Bed(Object):
 
     def __init__(self):
+        self.name = "bed"
+        self.unique_name = "bed"
         self.description = "A handsome four-poster with a patchwork quilt and gauzy maroon canopy."
-        self.id = "bed"
 
     # TODO make this not hardcoded?
     def stand(self):
@@ -19,7 +20,8 @@ class Bed(Object):
 class Dresser(Openable, Container, Object):
 
     def __init__(self, *objs):
-        self.id = "dresser"
+        self.name = "dresser"
+        self.unique_name = "dresser"
         self.is_open = False
         self.objects = [obj for obj in objs]
         self.description = "A dresser made of blonde wood, with small brass handles."
@@ -37,7 +39,8 @@ class Dresser(Openable, Container, Object):
 
 class Lamp(Lightable, Object):
     def __init__(self):
-        self.id = "lamp"
+        self.name = "lamp"
+        self.unique_name = "lamp"
         self.is_lit = False
         self.description = "The lamp is set high on the wall, its tawdry plaid shade almost out of reach."
         self.on_description = "The object throws a soft light, illuminating the room."
@@ -52,7 +55,8 @@ class Lamp(Lightable, Object):
 class UnreachableLamp(UnreachableLight, Object):
 
     def __init__(self, room=None):
-        self.id = "unreachable_lamp"
+        self.name = "lamp"
+        self.unique_name = "unreachable_lamp"
         self._room = room
         self.block = True
         self.is_lit = False
@@ -69,6 +73,7 @@ class UnreachableLamp(UnreachableLight, Object):
 
 class Chair(Climbable, Gettable, Object):
     def __init__(self):
-        self.id = "chair"
+        self.name = "chair"
+        self.unique_name = "chair"
         self.has_user = False
         self.description = "A sturdy wooden chair with dark wooden slats."
