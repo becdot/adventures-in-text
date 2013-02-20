@@ -8,4 +8,5 @@ To do
 - have grammar dealt with in its own function?  
   - have a function that splits up action and deals with it appropriately.
 - better grammar for underscore actions (e.g. look_in -- be able to say "look in <object>")
-- 'start a new game' button on site
+- support for having multiple objects with the same obj.name 
+- can't climb an object in your inventory

@@ -25,7 +25,7 @@ def play_game(old_game, action):
     try:
         verb, obj = action.split()
         for item in location.objects + inventory:
-            if obj == item.id:
+            if obj == item.name:
                 obj = item
     except ValueError:
         verb = action

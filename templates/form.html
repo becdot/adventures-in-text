@@ -7,7 +7,7 @@
     <ul>
     {% if room.objects %}
         {% for item in room.objects %}
-            <li>{{item.id}}</li>
+            <li>{{item.name}}</li>
         {% endfor %}
     {% else %}
         <li>Empty</li>
