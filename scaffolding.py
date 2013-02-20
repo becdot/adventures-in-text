@@ -10,7 +10,13 @@ class Room(object):
     def look(self):
         return self.description
 
-    def move(self, direction):
+    def move(self, inventory, direction):
+        for obj in self.objects + inventory:
+            try:
+                if obj.has_user:
+                    return "You must climb down first."
+            except AttributeError:
+                pass
         if direction in self.exits:
             return self.exits[direction]
         else:
@@ -23,7 +29,7 @@ class Object(object):
     def look(self):
         return str(self)
 
-# define all possible verbs on Object that return an error message (You can't <verb> this object)
+# define all possible verbs on Object to return an error message (You can't <verb> this object)
 # properties can override these base verbs
 
 VERBS = ['open', 'close', 'pull', 'push', 'shut', 'light', 'turn_on', 'snuff', 'turn_off', 'get', 'pickup', 'drop', 'climb',\

@@ -1,12 +1,16 @@
 To do
 
-- when doing grammar, make sure that user cannot leave room if still standing on something (alternatively, set obj.has_user to False)
-- put object attributes as default arguments so that they can be customized more easily
+- standing/climbing
+    - user should not be able to leave room if standing on something
+    - shouldn't be able to climb an object in your inventory
+- put object attributes as default arguments so that they can be customized more easily?
 - have dynamic container and room descriptions so that they can return something about the objects inside them
     - Container.look_in returns container.objects
-- better way to set room exits
-- have grammar dealt with in its own function?  
-  - have a function that splits up action and deals with it appropriately.
-- better grammar for underscore actions (e.g. look_in -- be able to say "look in <object>")
-- support for having multiple objects with the same obj.name 
-- can't climb an object in your inventory
+- better way to set room exits when initializing
+- grammar
+  - have grammar dealt with in its own function?  
+  - have a function that splits up action and deals with it appropriately
+  - better grammar for underscore actions (e.g. look_in -- be able to say "look in <object>")
+  - ability to use adjectives (e.g. "get brass lamp") 
+- support for having multiple objects with the same obj.name (right now, would run into a conflict)
+- use try/except blocks for get/drop/look so that if user types in something that is not an object, it doesn't throw an error

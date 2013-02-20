@@ -1,6 +1,6 @@
 import scaffolding # sets base verbs on Object class
 
-def moving(action, location):
+def moving(action, location, inventory):
     """If action contains directional information, calls location.move(direction) 
     and returns either a new Room object or an error message.  Otherwise, returns False."""
 
@@ -8,10 +8,10 @@ def moving(action, location):
     long_dir = ['north', 'northeast', 'east', 'southeast', 'south', 'southwest', 'west', 'northwest']
     for d in long_dir:
         if d in action.split():
-            return location.move(d)
+            return location.move(inventory, d)
     for d in short_dir:
         if d in action.split():
-            return location.move(long_dir[short_dir.index(d)])
+            return location.move(inventory, long_dir[short_dir.index(d)])
     return False
 
 
@@ -32,8 +32,9 @@ def play_game(old_game, action):
         obj = None
 
     # global methods that need access to location and/or inventory
-    if moving(verb, location):
-        new_location = moving(verb, location)
+    new_location = moving(verb, location, inventory)
+    print "new location is", new_location
+    if new_location:
         if isinstance(new_location, scaffolding.Room): # if moving to a room, update location and print the new room description
             game['location'] = new_location
         else:   

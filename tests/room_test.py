@@ -1,6 +1,6 @@
 from scaffolding import Room, Object
 from properties import Openable, Lightable
-from objects import Bed, Dresser, Lamp
+from objects import Bed, Dresser, Lamp, Chair
                         
 
 import unittest
@@ -11,8 +11,11 @@ class TestRooms(unittest.TestCase):
         self.dresser = Dresser()
         self.bed = Bed()
         self.lamp = Lamp()
+        self.chair = Chair()
         self.room = Room(name = "Room", objects = [self.dresser, self.bed, self.lamp], description = "A room.", exits={})
-        
+        self.southern_room = Room(name='', objects=[], description='', exits={'north':self.room})
+        self.room.exits['south'] = self.southern_room
+
     def tearDown(self):
         pass
 
@@ -22,7 +25,7 @@ class TestRooms(unittest.TestCase):
         self.assertEquals(self.room.name, "Room")
         self.assertEquals(self.room.objects, [self.dresser, self.bed, self.lamp])
         self.assertEquals(self.room.description, "A room.")
-        self.assertEquals(self.room.exits, {})
+        self.assertEquals(self.room.exits, {'south': self.southern_room})
     
     def test_room_look(self):
         "room.look() returns room.description"
@@ -32,11 +35,24 @@ class TestRooms(unittest.TestCase):
         """Calling move should return the room object that is in that direction.  
         If the direction does not exist, an error should be thrown."""
         # existing direction
-        other_room = Room(name='', objects=[], description='', exits={'north':self.room})
-        self.room.exits['south'] = other_room
-        self.assertEquals(self.room.move('south'), other_room)
+        self.assertEquals(self.room.move([], 'south'), self.southern_room)
         # direction that does not exist
-        self.assertEquals(self.room.move('west'), "You cannot go that way.")
+        self.assertEquals(self.room.move([], 'west'), "You cannot go that way.")
+
+    def test_move_when_standing(self):
+        "User should not be able to move locations when standing on something"
+        # when chair is in user's inventory
+        inv = [self.chair]
+        self.chair.has_user = True
+        self.assertEquals(self.room.move(inv, 'south'), "You must climb down first.")
+        # when chair is in the room
+        self.room.objects.append(self.chair)
+        self.assertEquals(self.room.move([], 'south'), "You must climb down first.")
+        # but should succeed when the user gets down
+        self.chair.has_user = False
+        self.assertEquals(self.room.move([], 'south'), self.southern_room)
+
+
 
 if __name__ == "__main__":
     unittest.main()
