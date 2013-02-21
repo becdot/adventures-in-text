@@ -1,18 +1,7 @@
 import scaffolding # sets base verbs on Object class
+from grammar import parse
 
-def moving(action, location, inventory):
-    """If action contains directional information, calls location.move(direction) 
-    and returns either a new Room object or an error message.  Otherwise, returns False."""
 
-    short_dir = ['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw']
-    long_dir = ['north', 'northeast', 'east', 'southeast', 'south', 'southwest', 'west', 'northwest']
-    for d in long_dir:
-        if d in action.split():
-            return location.move(inventory, d)
-    for d in short_dir:
-        if d in action.split():
-            return location.move(inventory, long_dir[short_dir.index(d)])
-    return False
 
 
 def play_game(old_game, action):

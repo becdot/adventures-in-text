@@ -7,10 +7,10 @@ class Room(object):
         self.description = description
         self.exits = exits
 
-    def look(self):
+    def look(self, **kwargs):
         return self.description
 
-    def move(self, inventory, direction):
+    def move(self, direction, inventory):
         for obj in self.objects + inventory:
             try:
                 if obj.has_user:
