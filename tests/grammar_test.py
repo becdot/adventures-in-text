@@ -21,6 +21,9 @@ class TestGrammar(unittest.TestCase):
         pass
 
 
+    # need to change tests to cope with grammar returning result of getattr instead of grammar returning strings
+
+
     # single word action
     def test_direction(self):
         "Direction (either 'n' or 'north') should return ('move', <direction>"
@@ -69,7 +72,7 @@ class TestGrammar(unittest.TestCase):
         self.assertEquals(parse(action, self.room, self.inv), ('move', 'north'))
 
     # three-word actions
-    
+
 
 
 
