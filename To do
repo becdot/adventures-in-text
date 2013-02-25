@@ -2,7 +2,6 @@ To do
 
 - put object attributes as default arguments so that they can be customized more easily?
 - have dynamic container and room descriptions so that they can return something about the objects inside them
-    - Container.look_in returns container.objects
 - better way to set room exits when initializing
 - grammar
     - use lambdas or mapping instead of list comprehensions
@@ -11,6 +10,4 @@ To do
 - setting new_game = deepcopy(old_game) in play_game.py makes locations not update properly
 - throw exceptions for required attributes that are not provided
 - set class methods serialise/de-serialise to help with database storage (instead of pickling)
-- standardise parameters to accept inventory and location?
-  - set default location/inventory for functions that need them specifically, otherwise just pass in **kwargs
 - in light of passing in room and inv, can rethink UnreachableLightable and Climable private methods/attributes?

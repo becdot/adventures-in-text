@@ -105,10 +105,10 @@ class TestObjects(unittest.TestCase):
         room = Room(self.bed, self.dresser)
         inv = [self.chair]
         # dresser is closed
-        self.assertEquals(self.dresser.put_in(object=self.chair, inventory=inv), "Try opening the container first.")
+        self.assertEquals(self.dresser.put_in(self.chair, inventory=inv), "Try opening the container first.")
         # dresser is open
         self.dresser.open()
-        self.dresser.put_in(object=self.chair, inventory=inv)
+        self.dresser.put_in(self.chair, inventory=inv)
         self.assertEquals(self.dresser.objects, [self.chair])
         self.assertEquals(inv, [])
     def test_look_in_dresser(self):

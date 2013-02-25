@@ -68,12 +68,11 @@ class UnreachableLight(Lightable):
             return super(UnreachableLight, self).light()
 
     def turn_on(self, **kwargs):
-        return self.light(**kwargs)
+        return self.light(*args, **kwargs)
 
-    def snuff(self, **kwargs):
-        if 'location' not in kwargs:
+    def snuff(self, location=None, **kwargs):
+        if not location:
             raise Exception('location must be provided')
-        location = kwargs['location']
         self._is_standing(location)
         if self.block:
             return self.error_description
@@ -81,18 +80,15 @@ class UnreachableLight(Lightable):
             return super(UnreachableLight, self).snuff()
 
     def turn_off(self, **kwargs):
-        return self.snuff(**kwargs)
+        return self.snuff(*args, **kwargs)
 
 class Gettable(object):
     # room can be an actual room or a Container object
-    def get(self, **kwargs):
-        if 'location' not in kwargs:
+    def get(self, location=None, inventory=None, **kwargs):
+        if not location:
             raise Exception('location must be provided')
-        if 'inventory' not in kwargs:
+        if inventory == None:
             raise Exception('inventory must be provided')
-
-        location = kwargs['location']    
-        inventory = kwargs['inventory']
 
         for obj in location.objects:
             try:
@@ -115,14 +111,12 @@ class Gettable(object):
     def pickup(self, **kwargs):
         return self.get(**kwargs)
 
-    def drop(self, **kwargs):
-        if 'location' not in kwargs:
+    def drop(self, location=None, inventory=None, **kwargs):
+        if not location:
             raise Exception('location must be provided')
-        if 'inventory' not in kwargs:
+        if inventory == None:
             raise Exception('inventory must be provided')
 
-        location = kwargs['location']    
-        inventory = kwargs['inventory']
         if self in inventory:
             location.objects.append(self)
             inventory.remove(self)
@@ -132,11 +126,10 @@ class Gettable(object):
 class Climbable(object):
     # climb and stand are multipurpose 
     #(i.e. calling climb once will set has_user to True, while calling climb again will set has_user to False)
-    def climb(self, **kwargs):
-        if 'inventory' not in kwargs:
+    def climb(self, inventory=None, **kwargs):
+        if inventory == None:
             raise Exception('inventory must be provided')
 
-        inventory = kwargs['inventory']
         if self in inventory:
             return "You cannot climb that while still holding it."
         if self.has_user:
@@ -149,11 +142,10 @@ class Climbable(object):
         return self.climb(**kwargs)
 
     # get_on, get_off, and get_down are single-purpose
-    def get_on(self, **kwargs):
-        if 'inventory' not in kwargs:
+    def get_on(self, inventory=None, **kwargs):
+        if inventory == None:
             raise Exception('inventory must be provided')
 
-        inventory = kwargs['inventory']
         if self in inventory:
             return "You cannot climb that while still holding it."
         if self.has_user:
@@ -161,11 +153,10 @@ class Climbable(object):
         else:
             self.has_user = True
             return "You clamber onto the object."
-    def get_off(self, **kwargs):
-        if 'inventory' not in kwargs:
+    def get_off(self, inventory=None, **kwargs):
+        if inventory == None:
             raise Exception('inventory must be provided')
 
-        inventory = kwargs['inventory']
         if self.has_user:
             self.has_user = False
             return "You step carefully back down."
@@ -178,14 +169,10 @@ class Container(object):
 
     # get is defined in Gettable (allows an object to be 'gotten' from a room or open object)
 
-    def put_in(self, **kwargs):
-        if 'inventory' not in kwargs:
+    def put_in(self, obj, inventory=None, **kwargs):
+        if inventory == None:
             raise Exception('inventory must be provided')
-        if 'object' not in kwargs:
-            raise Exception('object must be provided') 
 
-        obj = kwargs['object']
-        inventory = kwargs['inventory']
         if self.is_open:
             self.objects.append(obj)
             inventory.remove(obj)
