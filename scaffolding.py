@@ -26,7 +26,7 @@ class Object(object):
     def __str__(self):
         return self.description
 
-    def look(self):
+    def look(self, **kwargs):
         return str(self)
 
 # define all possible verbs on Object to return an error message (You can't <verb> this object)

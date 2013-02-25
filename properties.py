@@ -58,10 +58,9 @@ class UnreachableLight(Lightable):
             except AttributeError:
                 pass
 
-    def light(self, **kwargs):
-        if 'location' not in kwargs:
+    def light(self, location=None, **kwargs):
+        if not location:
             raise Exception('location must be provided')
-        location = kwargs['location']
         self._is_standing(location)
         if self.block:
             return self.error_description

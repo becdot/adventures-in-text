@@ -5,12 +5,11 @@ To do
     - Container.look_in returns container.objects
 - better way to set room exits when initializing
 - grammar
-  - have grammar dealt with in its own function?  
-  - have a function that splits up action and deals with it appropriately
-  - better grammar for underscore actions (e.g. look_in -- be able to say "look in <object>")
-  - ability to use adjectives (e.g. "get brass lamp") 
+    - use lambdas or mapping instead of list comprehensions
+    - less hardcoded, more intelligent processing
 - support for having multiple objects with the same obj.name (right now, would run into a conflict)
 - use try/except blocks for get/drop/look so that if user types in something that is not an object, it doesn't throw an error
+- when database is empty, get_game function throws an index error
 
 
 
@@ -18,5 +17,6 @@ To do
 - throwing exceptions for required attributes that are not provided
 - class methods of serialise/de-serialise
 - standardise parameters to accept inventory and location?
+  - set default location/inventory for functions that need them specifically, otherwise just pass in **kwargs
 - grammar function that takes action, inventory, location and returns (obj, verb) for the play_game function to deal with
 - in light of passing in room and inv, can rethink UnreachableLightable and Climable private methods/attributes?
