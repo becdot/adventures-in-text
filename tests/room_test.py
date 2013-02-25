@@ -35,22 +35,22 @@ class TestRooms(unittest.TestCase):
         """Calling move should return the room object that is in that direction.  
         If the direction does not exist, an error should be thrown."""
         # existing direction
-        self.assertEquals(self.room.move([], 'south'), self.southern_room)
+        self.assertEquals(self.room.move('south', []), self.southern_room)
         # direction that does not exist
-        self.assertEquals(self.room.move([], 'west'), "You cannot go that way.")
+        self.assertEquals(self.room.move('west', []), "You cannot go that way.")
 
     def test_move_when_standing(self):
         "User should not be able to move locations when standing on something"
         # when chair is in user's inventory
         inv = [self.chair]
         self.chair.has_user = True
-        self.assertEquals(self.room.move(inv, 'south'), "You must climb down first.")
+        self.assertEquals(self.room.move('south', inv), "You must climb down first.")
         # when chair is in the room
         self.room.objects.append(self.chair)
-        self.assertEquals(self.room.move([], 'south'), "You must climb down first.")
+        self.assertEquals(self.room.move('south', []), "You must climb down first.")
         # but should succeed when the user gets down
         self.chair.has_user = False
-        self.assertEquals(self.room.move([], 'south'), self.southern_room)
+        self.assertEquals(self.room.move('south', []), self.southern_room)
 
 
 

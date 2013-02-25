@@ -34,12 +34,10 @@ def check_noun(location, inventory, noun, adj=None):
     if adj:
         # adj in obj's id is more relevant than adj in obj's description (e.g. brass_lamp > "The brass lamp is grungy.")
         adj_in_name = [obj for obj in all_objs if noun in obj.name and adj in obj.id]
-        print "adj_in_name", adj_in_name
         if len(adj_in_name) == 1:
             return adj_in_name[0]
         # but adj in description is second-best
         adj_in_desc = [obj for obj in all_objs if noun in obj.name and adj in str(obj)]
-        print "adj_in_desc", adj_in_desc
         if len(adj_in_desc) == 1:
             return adj_in_desc[0]
         # if the adjective does not narrow it down, return an error message
@@ -48,7 +46,6 @@ def check_noun(location, inventory, noun, adj=None):
         return "That object does not exist."
     # if no adjective has been passed in, return an error message
     else:
-        print "error"
         if all_named_objs.count(noun) > 1:
             return "More than one object fits that name."
         return "That object does not exist."
