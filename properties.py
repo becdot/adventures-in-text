@@ -138,6 +138,7 @@ class Climbable(object):
         else:
             self.has_user = True
             return "You clamber onto the object."
+
     def stand(self, **kwargs):
         return self.climb(**kwargs)
 
@@ -153,6 +154,7 @@ class Climbable(object):
         else:
             self.has_user = True
             return "You clamber onto the object."
+
     def get_off(self, inventory=None, **kwargs):
         if inventory == None:
             raise Exception('inventory must be provided')
@@ -162,6 +164,7 @@ class Climbable(object):
             return "You step carefully back down."
         else:
             return "You are not standing on anything."
+            
     def get_down(self, **kwargs):
         return self.get_off(**kwargs)
 

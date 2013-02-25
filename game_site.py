@@ -17,16 +17,21 @@ def teardown_request(exception):
 def index():
     if request.method == 'GET':
         try:
-            if session['id']: # if a session is already running, try to load the user's previous game
+            loaded = get_game(session['id'])
+            # if a session is already running and it exists in the DB, try to load the user's previous game
+            if session['id'] and loaded: 
                 print "session", session['id'], "is already initialized"
-                loaded = get_game(session['id'])
                 return render_template('form.html', room=loaded['location'], \
                             inventory=loaded['inv'], exits=loaded['location'].exits)
-        except KeyError: # otherwise, load a new game
+            else:
+                raise KeyError
+        # otherwise, load a new game
+        except KeyError: 
             print "loading a totally new game"
             session['id'] = create_user(initial)
             print "new session id created:", session['id']
             return render_template('form.html', room=initial['location'], inventory=initial['inv'], exits=initial['location'].exits)
+            
     elif request.method == 'POST':
         action = request.form['action']
         user_id = session['id']

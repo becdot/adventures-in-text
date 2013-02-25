@@ -30,9 +30,9 @@ def save_game(user_id, game):
 
 def get_game(user_id):
     cur = g.db.execute('SELECT data FROM game WHERE id = (?)', [user_id])
-    data = cur.fetchall()[0][0]
+    data = cur.fetchall()
     if data:
-        return loads(data)
+        return loads(data[0][0])
     return None
 
 def delete_game(user_id):

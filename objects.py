@@ -57,7 +57,6 @@ class UnreachableLamp(UnreachableLight, Object):
     def __init__(self, room=None):
         self.id = "unreachable_lamp"
         self.name = "lamp"
-        self._room = room
         self.block = True
         self.is_lit = False
         self.error_description = "You strain but cannot quite reach the switch."
