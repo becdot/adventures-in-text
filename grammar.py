@@ -25,6 +25,7 @@ def check_noun(location, inventory, noun, adj=None):
     room_inv_objs = [obj for obj in location.objects + inventory]
     all_objs = contained_objects + room_inv_objs
     all_named_objs = [obj.name for obj in all_objs]
+    print all_named_objs, noun
   
     # if there is only one match for the noun, return it
     if all_named_objs.count(noun) == 1:
@@ -67,7 +68,7 @@ def make_action(location, inventory, noun, verb, preposition=None):
 def parse(action, location, inventory):
     "Given an action, returns (verb, noun)"
     
-    prepositions = ['of', 'on', 'in', 'to', 'for', 'with', 'from', 'around', 'under', 'over', 'out', 'off']
+    prepositions = ['of', 'on', 'in', 'to', 'for', 'with', 'from', 'around', 'under', 'over', 'out', 'off', 'down']
     action = action.split()
 
     if len(action) == 1:
@@ -106,14 +107,22 @@ def parse(action, location, inventory):
         return make_action(location, inventory, obj, verb)
 
 
-    # if len(action) == 4:
-    #     # assume action is in the form <verb preposition adjective noun> (e.g. stand on sturdy chair)
-    #     # or in the form <verb noun preposition noun> (e.g. get key from chest)
-    #     verb, e1, e2, noun = action
-    #     if e1 in prepositions:
-    #         verb, prep, adj, noun = action
-    #         obj = check_noun(location, inventory, noun, adj)
-    #         return make_action(location, inventory, noun, verb, preposition)
+    if len(action) == 4:
+        # assume action is in the form <verb preposition adjective noun> (e.g. stand on sturdy chair)
+        # or in the form <verb preposition preposition noun> (e.g. get down from chair)
+        # or in the form <verb noun preposition noun> (e.g. get key from chest)
+        verb, two, three, noun = action
+        if two in prepositions:
+            verb, prep, adj, noun = action
+            obj = check_noun(location, inventory, noun, adj)
+            return make_action(location, inventory, obj, verb, prep)
+        if three in prepositions:
+            verb, noun = action[0], action[1]
+            obj = check_noun(location, inventory, noun)
+            return make_action(location, inventory, obj, verb)
+        else:
+            return "I cannot parse this action."
+
         
 
 

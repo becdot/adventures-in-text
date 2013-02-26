@@ -135,8 +135,44 @@ class TestGrammar(unittest.TestCase):
 
 
     # four-word actions
+    def test_get_down_from_chair(self):
+        "Should set has_user to False"
+        self.room.objects.append(self.chair)
+        self.chair.has_user = True
+        action = "get down from chair"
+        parse(action, self.room, self.inv)
+        self.assertFalse(self.chair.has_user)
 
+    def climb_down_from_chair(self):
+        "Should set has_user to False"
+        self.room.objects.append(self.chair)
+        self.chair.has_user = True
+        action = "climb down from chair"
+        parse(action, self.room, self.inv)
+        self.assertFalse(self.chair.has_user)        
 
+    def stand_on_dark_chair(self):
+        "Should set has_User to True"
+        self.room.objects.append(self.chair)
+        action = "stand on dark chair"
+        parse(action, self.room, self.inv)
+        self.assertTrue(self.chair.has_user) 
+
+    def turn_on_plaid_lamp(self):
+        "Should set is_lit to True"
+        action = "turn on plaid lamp"
+        self.room.objects.append(self.chair)
+        self.chair.has_user = True
+        parse(action, self.room, self.inv)
+        self.assertTrue(self.ulamp.has_user)
+
+    def get_chair_from_dresser(self):
+        "Should add chair to inventory"
+        self.dresser.objects.append(self.chair)
+        self.dresser.is_open = True
+        action = "get chair from dresser"
+        parse(action, self.room, self.inv)
+        self.assertEquals(self.inv, [self.chair])        
 
 
 

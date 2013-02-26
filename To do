@@ -4,9 +4,10 @@ To do
 - have dynamic container and room descriptions so that they can return something about the objects inside them
 - better way to set room exits when initializing
 - grammar
+    - have support for more than three-word actions
     - use lambdas or mapping instead of list comprehensions
     - less hardcoded, more intelligent processing
-- when database is empty, get_game function throws an index error
+    - "get down" fails
 - setting new_game = deepcopy(old_game) in play_game.py makes locations not update properly
 - throw exceptions for required attributes that are not provided
 - set class methods serialise/de-serialise to help with database storage (instead of pickling)
