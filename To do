@@ -8,6 +8,7 @@ To do
     - use lambdas or mapping instead of list comprehensions
     - less hardcoded, more intelligent processing
     - "get down" fails
+    - better default error processing instead of setting VERBS on base Object
 - setting new_game = deepcopy(old_game) in play_game.py makes locations not update properly
 - throw exceptions for required attributes that are not provided
 - set class methods serialise/de-serialise to help with database storage (instead of pickling)

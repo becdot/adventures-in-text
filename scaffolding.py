@@ -23,6 +23,8 @@ class Room(object):
             return "You cannot go that way."
 
 class Object(object):
+    required_attrs = ['name', 'id', 'description']
+    
     def __str__(self):
         return self.description
 
@@ -45,10 +47,3 @@ def set_methods(verbs):
         setattr(Object, v, make_func(v))
 
 set_methods(VERBS)
-
-
-# Bedroom = Room(name='Bedroom', objects=[Bed, Lamp, Dresser], description='A homey room with blue wallpaper 
-#            and old-fashioned scenes hanging from brass frames.  There is a large four-poster against one wall
-#            and a small dresser in the corner.', exits={'west': 'Closet'})
-# Closet = Room(name='Closet', objects=[Chair], description='Significantly colder than the bedroom, 
-#            the closet has a slanted roof that only makes it feel more cramped.', exits: {'east': 'Bedroom'})

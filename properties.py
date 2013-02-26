@@ -1,7 +1,7 @@
 # Properties
 
 class Openable(object):
-    # TODO make messages not hardcoded?
+    required_attrs = ['is_open', 'open_description', 'closed_description']
     
     def open(self, **kwargs):
         if self.is_open:
@@ -27,6 +27,7 @@ class Openable(object):
         return self.close(**kwargs)
 
 class Lightable(object):
+    required_attrs = ['is_lit', 'on_description', 'off_description']
 
     def light(self, **kwargs):
         if self.is_lit:
@@ -49,6 +50,8 @@ class Lightable(object):
         return self.snuff(**kwargs)
 
 class UnreachableLight(Lightable):
+    required_attrs = ['block', 'is_lit', 'error_description']
+
     def _is_standing(self, room):
         self.block = True
         for obj in room.objects:
@@ -83,6 +86,8 @@ class UnreachableLight(Lightable):
         return self.snuff(*args, **kwargs)
 
 class Gettable(object):
+    required_attrs = []
+
     # room can be an actual room or a Container object
     def get(self, location=None, inventory=None, **kwargs):
         if not location:
@@ -124,6 +129,8 @@ class Gettable(object):
             return "That item is not currently in your inventory."
 
 class Climbable(object):
+    required_attrs = ['has_user']
+
     # climb and stand are multipurpose 
     #(i.e. calling climb once will set has_user to True, while calling climb again will set has_user to False)
     def climb(self, inventory=None, **kwargs):
@@ -169,6 +176,7 @@ class Climbable(object):
         return self.get_off(**kwargs)
 
 class Container(object):
+    required_attrs = ['is_open', 'objects']
 
     # get is defined in Gettable (allows an object to be 'gotten' from a room or open object)
 

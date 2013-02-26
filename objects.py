@@ -1,10 +1,27 @@
 from scaffolding import Object
 from properties import Openable, Lightable, UnreachableLight, Gettable, Climbable, Container
 
+def validate_attrs(classname):
+    def decorator(init):
+        def decorated(self, *args, **kwargs):
+            init(self, *args, **kwargs)
+            failed = []
+            for base in globals()[classname].__bases__:
+                for required_attr in base.required_attrs:
+                    try:
+                        getattr(self, required_attr)
+                    except AttributeError:
+                        failed.append(required_attr)
+            if failed:
+                raise Exception("{} object missing required attributes: {}".format(classname, ', '.join(failed)))
+        return decorated
+    return decorator
+
+
 # Specific Objects
 
 class Bed(Object):
-
+    @validate_attrs('Bed')
     def __init__(self):
         self.description = "A handsome four-poster with a patchwork quilt and gauzy maroon canopy."
         self.id = "bed"
@@ -18,7 +35,7 @@ class Bed(Object):
         return self.climb(**kwargs)
 
 class Dresser(Openable, Container, Object):
-
+    @validate_attrs('Dresser')
     def __init__(self, *objs):
         self.id = "dresser"
         self.name = "dresser"
@@ -38,6 +55,7 @@ class Dresser(Openable, Container, Object):
             return '  '.join([self.description, self.closed_description])
 
 class Lamp(Lightable, Object):
+    @validate_attrs('Lamp')
     def __init__(self):
         self.id = "lamp"
         self.name = "lamp"
@@ -53,8 +71,8 @@ class Lamp(Lightable, Object):
             return '  '.join([self.description, self.off_description])
 
 class UnreachableLamp(UnreachableLight, Object):
-
-    def __init__(self, room=None):
+    @validate_attrs('UnreachableLamp')
+    def __init__(self):
         self.id = "unreachable_lamp"
         self.name = "lamp"
         self.block = True
@@ -71,6 +89,7 @@ class UnreachableLamp(UnreachableLight, Object):
             return '  '.join([self.description, self.off_description])
 
 class Chair(Climbable, Gettable, Object):
+    @validate_attrs('Chair')
     def __init__(self):
         self.id = "chair"
         self.name = "chair"
