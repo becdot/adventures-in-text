@@ -7,6 +7,9 @@ class Room(object):
         self.description = description
         self.exits = exits
 
+    def serialise(self):
+        return {obj.id: obj.serialise() for obj in self.objects}
+
     def look(self, **kwargs):
         return self.description
 
@@ -24,6 +27,7 @@ class Room(object):
 
 class Object(object):
     required_attrs = ['name', 'id', 'description']
+    changeable_attrs = []
     
     def __str__(self):
         return self.description

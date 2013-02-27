@@ -1,20 +1,20 @@
 from play_game import play_game
-from game import game
+from game import bec_game
 import unittest
-from copy import deepcopy
 
 class TestMiniGame(unittest.TestCase):
 
     def test_play(self):
         "Tests basic play_game functions: moving locations, getting and dropping objects, interacting with objects, etc."
-        new_game = deepcopy(game)
+        new_game = bec_game()
         bedroom, closet = new_game['rooms'][0], new_game['rooms'][1]
         bed, lamp, dresser = bedroom.objects[0], bedroom.objects[1], bedroom.objects[2]
         chair = closet.objects[0]
 
         # go west
         update = play_game(new_game, 'west')[0]
-        self.assertEquals(update['location'], closet)
+        print update['location'].name
+        self.assertEquals(update['location'].name, closet.name)
         # go north (impossible) should not change location
         update = play_game(update, 'north')[0]
         self.assertEquals(update['location'], closet)

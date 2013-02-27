@@ -1,10 +1,9 @@
 import scaffolding # sets base verbs on Object class
 from grammar import parse
 
-def play_game(old_game, action):
+def play_game(game, action):
     """Takes a game dictionary and an action and attempts to call the action.  
     Returns a tuple of the updated game dictionary and any messages."""
-    game = old_game
     location = game['location']
     inventory = game['inv']
     message = None

@@ -24,11 +24,15 @@ def create_object(bases=(), attributes={}, methods={}):
     @validate_attrs(bases)
     def init(self, *args, **kwargs):
         for k, v in attributes.items():
-            if v == None:
+            if v == []:
                 setattr(self, k, [])
             else:
                 setattr(self, k, v)
 
+    def serialise(self):
+        return {attr: getattr(self, attr) for base in bases for attr in base.changeable_attrs}
+
     methods['__init__'] = init
+    methods['serialise'] = serialise
 
     return type(cls_name, bases, methods)

@@ -7,9 +7,9 @@ To do
     - have support for more than four-word actions
     - use lambdas or mapping instead of list comprehensions
     - less hardcoded, more intelligent processing
-    - "get down" fails
     - better default error processing instead of setting VERBS on base Object
 - setting new_game = deepcopy(old_game) in play_game.py makes locations not update properly
 - throw exceptions for required attributes that are not provided
 - set class methods serialise/de-serialise to help with database storage (instead of pickling)
 - in light of passing in room and inv, can rethink UnreachableLightable and Climable private methods/attributes?
+- currently no way for objects to get created or destroyed within the game -- might want to change eventually

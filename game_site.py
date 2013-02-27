@@ -1,4 +1,4 @@
-from game import game as initial
+from game import bec_game as initial
 from play_game import play_game
 from adv_db_methods import SECRET_KEY, DATABASE, DEBUG, app,\
                             connect_db, init_db, save_game, get_game, delete_game, create_user
@@ -28,7 +28,7 @@ def index():
         # otherwise, load a new game
         except KeyError: 
             print "loading a totally new game"
-            session['id'] = create_user(initial)
+            session['id'] = create_user(initial())
             print "new session id created:", session['id']
             return render_template('form.html', room=initial['location'], inventory=initial['inv'], exits=initial['location'].exits)
             

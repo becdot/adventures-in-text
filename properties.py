@@ -2,6 +2,7 @@
 
 class Openable(object):
     required_attrs = ['is_open', 'open_description', 'closed_description']
+    changeable_attrs = ['is_open']
     
     def open(self, **kwargs):
         if self.is_open:
@@ -28,6 +29,7 @@ class Openable(object):
 
 class Lightable(object):
     required_attrs = ['is_lit', 'on_description', 'off_description']
+    changeable_attrs = ['is_lit']
 
     def light(self, **kwargs):
         if self.is_lit:
@@ -51,6 +53,7 @@ class Lightable(object):
 
 class UnreachableLight(Lightable):
     required_attrs = ['block', 'is_lit', 'error_description']
+    changeable_attrs = ['block', 'is_lit']
 
     def _is_standing(self, room):
         self.block = True
@@ -70,7 +73,7 @@ class UnreachableLight(Lightable):
         else:
             return super(UnreachableLight, self).light()
 
-    def turn_on(self, **kwargs):
+    def turn_on(self, *args, **kwargs):
         return self.light(*args, **kwargs)
 
     def snuff(self, location=None, **kwargs):
@@ -82,11 +85,12 @@ class UnreachableLight(Lightable):
         else:
             return super(UnreachableLight, self).snuff()
 
-    def turn_off(self, **kwargs):
+    def turn_off(self, *args, **kwargs):
         return self.snuff(*args, **kwargs)
 
 class Gettable(object):
     required_attrs = []
+    changeable_attrs = []
 
     # room can be an actual room or a Container object
     def get(self, location=None, inventory=None, **kwargs):
@@ -130,6 +134,7 @@ class Gettable(object):
 
 class Climbable(object):
     required_attrs = ['has_user']
+    changeable_attrs = ['has_user']
 
     # climb and stand are multipurpose 
     #(i.e. calling climb once will set has_user to True, while calling climb again will set has_user to False)
@@ -177,6 +182,7 @@ class Climbable(object):
 
 class Container(object):
     required_attrs = ['is_open', 'objects']
+    changeable_attrs = ['is_open', 'objects']
 
     # get is defined in Gettable (allows an object to be 'gotten' from a room or open object)
 
