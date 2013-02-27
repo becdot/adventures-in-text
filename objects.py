@@ -24,12 +24,8 @@ def show_inside_str(self):
         return '  '.join([self.description, self.closed_description])
 
 
-
-# DRESSER does not work -- dresser.object is somehow a class attribute and not an instance attribute
-# and does not reset when the object is re-created
-
 dresser_dict = {'bases': (Openable, Container, Object),
-                'attributes': {'id': "dresser", 'name': "dresser", 'is_open': False, 'objects': [], 
+                'attributes': {'id': "dresser", 'name': "dresser", 'is_open': False, 'objects': None, 
                             'description': "A dresser made of blonde wood, with small brass handles.", 
                             'open_description': "The drawers hang open at a slight angle, indicating poor quality workmanship.", 
                             'closed_description': "All drawers are closed."},
@@ -67,41 +63,3 @@ Lamp = create_object(**lamp_dict)
 UnreachableLamp = create_object(**u_lamp_dict)
 Chair = create_object(**chair_dict)
 Dresser = create_object(**dresser_dict)
-
-
-# def validate_attrs(classname):
-#     def decorator(init):
-#         def decorated(self, *args, **kwargs):
-#             init(self, *args, **kwargs)
-#             failed = []
-#             for base in globals()[classname].__bases__:
-#                 for required_attr in base.required_attrs:
-#                     try:
-#                         getattr(self, required_attr)
-#                     except AttributeError:
-#                         failed.append(required_attr)
-#             if failed:
-#                 raise Exception("Missing required attributes: {}".format(', '.join(failed)))
-#         return decorated
-#     return decorator
-
-
-# class Dresser(Openable, Container, Object):
-#     @validate_attrs('Dresser')
-#     def __init__(self, *objs):
-#         self.id = "dresser"
-#         self.name = "dresser"
-#         self.is_open = False
-#         self.objects = [obj for obj in objs]
-#         self.description = "A dresser made of blonde wood, with small brass handles."
-#         self.open_description = "The drawers hang open at a slight angle, indicating poor quality workmanship."
-#         self.closed_description = "All drawers are closed."
-
-#     def __str__(self):
-#         if self.is_open:
-#             base = '  '.join([self.description, self.open_description])
-#             if self.look_in():
-#                 return base + '  ' + self.look_in()
-#             return base
-#         else:
-#             return '  '.join([self.description, self.closed_description])

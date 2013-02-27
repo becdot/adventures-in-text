@@ -20,22 +20,15 @@ def validate_attrs(bases):
 
 def create_object(bases=(), attributes={}, methods={}):
     cls_name = attributes['name'].title()
-    print cls_name
-    print attributes
 
     @validate_attrs(bases)
     def init(self, *args, **kwargs):
         for k, v in attributes.items():
-            setattr(self, k, v)
+            if v == None:
+                setattr(self, k, [])
+            else:
+                setattr(self, k, v)
 
     methods['__init__'] = init
 
     return type(cls_name, bases, methods)
-
-
-# candledict = {'bases': (Lightable, Object), 'attributes':{'name': 'candle', 'id': 'candle', 'is_lit': False, 'description': 'A candle.',
-#                 'on_description': 'It turns on.', 'off_description': 'It turns off.'}}
-
-# Candle = create_object(**candledict)
-
-# candle = Candle()
