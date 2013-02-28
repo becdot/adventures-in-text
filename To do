@@ -12,4 +12,8 @@ To do
 - throw exceptions for required attributes that are not provided
 - set class methods serialise/de-serialise to help with database storage (instead of pickling)
 - in light of passing in room and inv, can rethink UnreachableLightable and Climable private methods/attributes?
-- currently no way for objects to get created or destroyed within the game -- might want to change eventually
+- serialise/deserialise
+    - serialise and deserialise won't track changes to objects inside other objects
+    - not good support for objects changing between room and inventory
+    - all objects are checked against base game (assumes that no objects get created or destroyed -- might want to change)
+- overload equality operators in Room and Object classes so that can compare relative equality (e.g. bedroom.name == bedroom.name)

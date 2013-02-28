@@ -2,7 +2,6 @@ from grammar import parse, check_noun
 from objects import Dresser, Bed, Lamp, Chair, UnreachableLamp
 from scaffolding import Room
 import unittest
-from copy import deepcopy
 
 class TestGrammar(unittest.TestCase):
 

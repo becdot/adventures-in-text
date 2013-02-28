@@ -7,8 +7,31 @@ class Room(object):
         self.description = description
         self.exits = exits
 
+    def __eq__(self, other):
+        if len(self.objects) != len(other.objects):
+            return False
+        for i in range(len(self.objects)):
+            if sorted(self.objects)[i] != sorted(other.objects)[i]:
+                return False
+        return self.name == other.name and self.description == other.description
+
+    def __ne__(self, other):
+        if self.name != other.name or self.description != other.description:
+            return True
+        if len(self.objects) != len(other.objects):
+            return True
+        for i in range(len(self.objects)):
+            if sorted(self.objects)[i] != sorted(other.objects)[i]:
+                return True
+        return False 
+
+
     def serialise(self):
         return {obj.id: obj.serialise() for obj in self.objects}
+
+    def deserialise(self, data):
+        obj_data = (obj_dic for obj_id, obj_dic in data.items())
+        map(lambda obj, dic: obj.deserialise(dic), self.objects, obj_data)
 
     def look(self, **kwargs):
         return self.description

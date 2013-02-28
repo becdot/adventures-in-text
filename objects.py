@@ -2,31 +2,7 @@ from scaffolding import Object
 from properties import Openable, Lightable, UnreachableLight, Gettable, Climbable, Container
 from creation import create_object
 
-from json import loads, dumps
-
 # Specific Objects
-
-
-# def serialise_dresser(self, game_id):
-#     "Serialisation for: is_open, objects"
-#     data = dumps({'game_id': game_id,
-#                 'is_open': self.is_open,
-#                 'objects': [obj.id for obj in self.objects]})
-#     return data
-
-# def deserialise_dresser(self, data):
-#     """Deserialises dresser data in the form {game_id: 1, is_open: True, objects: []
-#         Sets loaded attributes on instance, and returns game_id"""
-#     unfolded = loads(data)
-#     for attr, value in unfolded.items():
-#         if hasattr(self, attr):
-#             setattr(self, attr, value)
-#     return unfolded['game_id']
-
-
-
-
-
 
 def light_str(self):
     if self.is_lit:
