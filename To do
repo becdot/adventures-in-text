@@ -1,11 +1,16 @@
 To do
 
-- when doing grammar, make sure that user cannot leave room if still standing on something (alternatively, set obj.has_user to False)
-- put object attributes as default arguments so that they can be customized more easily
-- have dynamic container and room descriptions so that they can return something about the objects inside them
-    - Container.look_in returns container.objects
-- better way to set room exits
-- have grammar dealt with in its own function?  
-  - have a function that splits up action and deals with it appropriately.
-- better grammar for underscore actions (e.g. look_in -- be able to say "look in <object>")
-- 'start a new game' button on site
+- better way to set room exits when initializing
+- grammar
+    - have support for more than four-word actions
+    - use lambdas or mapping instead of list comprehensions
+    - less hardcoded, more intelligent processing
+    - better default error processing instead of setting VERBS on base Object
+- in light of passing in room and inv, can rethink UnreachableLightable and Climable private methods/attributes?
+- serialise/deserialise
+    - serialise and deserialise won't track changes to objects inside other objects
+    - all objects are checked against base game (assumes that no objects get created or destroyed -- might want to change)
+- dynamic room class creation?
+- file saving
+ - if two people have the same session id, it overwrites the previous data -- need to check to see whether id is in database, and if so, increment it further?
+>>>>>>> Stashed changes
