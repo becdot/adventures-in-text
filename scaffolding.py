@@ -9,11 +9,20 @@ class Room(object):
 
     def __eq__(self, other):
         if len(self.objects) != len(other.objects):
+            print "len of objects !="
             return False
         for i in range(len(self.objects)):
             if sorted(self.objects)[i] != sorted(other.objects)[i]:
+                print "{} and {} not equal".format(self.objects[i], other.objects[i])
                 return False
-        return self.name == other.name and self.description == other.description
+        # return self.name == other.name and self.description == other.description
+        if self.name != other.name:
+            print "names !="
+            return False
+        if self.description != other.description:
+            print "descriptions !="
+            return False
+        return True
 
     def __ne__(self, other):
         if self.name != other.name or self.description != other.description:
@@ -25,11 +34,12 @@ class Room(object):
                 return True
         return False 
 
-
     def serialise(self):
+        "Returns a dictionary with object ids as keys, and object serialisation dictionaries as values"
         return {obj.id: obj.serialise() for obj in self.objects}
 
     def deserialise(self, data):
+        "Given a serialised dictionary, calls object.deserialise() on each object in self.objects"
         obj_data = (obj_dic for obj_id, obj_dic in data.items())
         map(lambda obj, dic: obj.deserialise(dic), self.objects, obj_data)
 
@@ -47,6 +57,7 @@ class Room(object):
             return self.exits[direction]
         else:
             return "You cannot go that way."
+
 
 class Object(object):
     required_attrs = ['name', 'id', 'description']

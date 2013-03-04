@@ -52,6 +52,20 @@ class TestRooms(unittest.TestCase):
         self.chair.has_user = False
         self.assertEquals(self.room.move('south', []), self.southern_room)
 
+    def test_equality(self):
+        "Two rooms should be considered equal if they have the same name, description, objects, and exits"
+        name, desc, exits = self.room.name, self.room.description, self.room.exits
+        objs = [Dresser(), Lamp(), Bed()]
+        other_room = Room(name, objs, desc, exits)
+        # equal
+        self.assertTrue(self.room == other_room)
+        other_room.objects.pop()
+        # not equal
+        self.assertFalse(self.room == other_room)
+
+
+
+
 
 
 if __name__ == "__main__":

@@ -5,6 +5,8 @@ import unittest
 class Serialisation(unittest.TestCase):
 
     def serialise(self, g):
+        """Takes a game instance, serialises it, and then creates a new game instance from the serialisation.
+            The old and new instances should be the same."""
         old = g.game
         s = g.serialise()
         g = Game(s)
@@ -12,6 +14,7 @@ class Serialisation(unittest.TestCase):
         self.assertEquals(old, new)
 
     def test_mini_game_with_serialisation(self):
+        "Tests basic game functions (same as mini_game.py) with serialisation"
 
         game = Game()
         bedroom, closet = game.game['rooms'][0], game.game['rooms'][1]
@@ -20,7 +23,7 @@ class Serialisation(unittest.TestCase):
 
         # move west
         game.play('move west')
-        self.assertEquals(game.game['location'].name, closet.name)
+        self.assertEquals(game.game['location'], closet)
         self.serialise(game)
         # go north (impossible) should not change location
         game.play('north')

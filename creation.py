@@ -19,6 +19,8 @@ def validate_attrs(bases):
 
 
 def create_object(bases=(), attributes={}, methods={}):
+    "Dynamically creates a new class given a dictionary of information (must contain bases, attributes, and methods)."
+
     cls_name = attributes['name'].title()
 
     @validate_attrs(bases)
@@ -45,7 +47,6 @@ def create_object(bases=(), attributes={}, methods={}):
         other_attrs = {attr: getattr(other, attr) for attr in required_attrs}
         return attrs != other_attrs or attrs.values() != other_attrs.values()
 
-
     def serialise(self):
         return {attr: getattr(self, attr) for base in bases for attr in base.changeable_attrs}
 
@@ -55,9 +56,10 @@ def create_object(bases=(), attributes={}, methods={}):
                 setattr(self, attr, value)
 
     methods['__init__'] = init
-    methods['serialise'] = serialise
-    methods['deserialise'] = deserialise
     methods['__eq__'] = equals
     methods['__ne__'] = not_equal
+    methods['serialise'] = serialise
+    methods['deserialise'] = deserialise
 
     return type(cls_name, bases, methods)
+    

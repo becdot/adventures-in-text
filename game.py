@@ -68,44 +68,16 @@ class Game:
         return data
 
     def get_obj(self, obj_id):
+        "Returns an object, given that object's id"
         return [obj for obj in self.all_objs if obj.id == obj_id][0]
 
     def deserialise(self, data):
+        """Given a dictionary of serialised information, updates each_room.objects and calls each_room.deserialise()
+            which updates any changes for the individual objects."""
         for room in self.game['rooms']:
             room_data = data['rooms'][room.name]
             room.objects = [self.get_obj(obj_id) for obj_id in room_data.keys()]
             room.deserialise(room_data)
         self.game['inv'] = [self.get_obj(obj_id) for obj_id in data['inv'].keys()]
         self.game['location'] = [room for room in self.game['rooms'] if room.name == data['location']][0]
-
-
-
-
-
-    # def compare(self, data):
-    #     for room in self.game['rooms']:
-    #         room_objs = sorted([obj.id for obj in room.objects])
-    #         data_objs = sorted([obj_id for obj in data['rooms'][room.name].keys()])
-    #         if room_objs != data_objs:
-
-
-
-
-    # def deserialise(self, data):
-    #     "Applies changes in data to each room (which in turn sets the changes on the room objects)"
-    #     # updates rooms
-    #     for room in self.game['rooms']:
-    #         for 
-
-
-    #     room_data = (room_dict for room, room_dict in data.items())
-    #     map(room.deserialise, self.game['rooms'], room_data)
-    #     # updates location
-    #     self.game['location'] = [room for room in self.rooms if room.name == data['location']][0]
-    #     # updates inventory
-    #     inv = [self.get_obj(obj_id) for obj_id in data['inv'].keys()]
-    #     map(obj.deserialise, inv, data['inv'].keys())
-
-
-
         

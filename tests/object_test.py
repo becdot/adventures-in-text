@@ -280,6 +280,17 @@ class TestObjects(unittest.TestCase):
         self.assertEquals(self.chair.drop(location=room, inventory=inv), "That item is not currently in your inventory.")
 
 
+    # test equality
+    def test_object_equality(self):
+        new_chair = Chair()
+        self.assertEquals(new_chair, self.chair)
+
+    # test inequality
+    def test_inequality(self):
+        new_chair = Chair()
+        new_chair.has_user = True
+        self.assertNotEqual(new_chair, self.chair)
+
     # test openable
     def test_openable_synonyms(self):
         "Calling dresser.pull = dresser.open; dresser.shut and dresser.push = dresser.close"
