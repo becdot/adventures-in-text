@@ -1,6 +1,6 @@
 from game import Game
 from adv_db_methods import SECRET_KEY, DATABASE, DEBUG, app,\
-                            connect_db, init_db, save_game, get_game, delete_game, create_user
+                            connect_db, init_db, save_game, get_game, delete_game, create_user, get_new_id
 
 from flask import Flask, render_template, request, session, redirect, url_for, g
 
@@ -40,6 +40,8 @@ def index():
             
     elif request.method == 'POST':
         action = request.form['action']
+        if 'id' not in session:
+            return redirect(url_for('index'))
         user_id = session['id']
         loaded = get_game(user_id)
         msg = loaded.play(action)
@@ -53,7 +55,7 @@ def index():
 def newgame():
     old_id = session['id']
     delete_game(old_id)
-    session['id'] = old_id + 1
+    session['id'] = get_new_id()
     print "user", old_id, "deleted"
     return redirect(url_for('index'))
 

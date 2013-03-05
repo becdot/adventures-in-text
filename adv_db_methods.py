@@ -67,14 +67,19 @@ def delete_game(user_id):
             db.write('')
             db.truncate()
 
+def get_new_id():
+    with closing(connect_db('r')) as db:       
+        ids = [loads(line)['user_id'] for line in db.readlines()]
+        user_id = 1
+        if ids: 
+            user_id = sorted(ids)[-1] + 1
+        return user_id
+
 def create_user(blank_game, user_id=None):
     "DB mode = r"
     with closing(connect_db('r')) as db:
         if not user_id:
-            user_id = 1        
-            ids = [loads(line)['user_id'] for line in db.readlines()]
-            if ids: 
-                user_id = sorted(ids)[-1] + 1
+            user_id = get_new_id()
         save_game(user_id, blank_game)
         flash('New user successfully created')
         return user_id
