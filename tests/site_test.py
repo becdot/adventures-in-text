@@ -6,7 +6,7 @@ import flask
 
 import game_site as site
 from adv_db_methods import SECRET_KEY, DATABASE, DEBUG, app,\
-    connect_db, init_db, save_game, get_game, delete_game, create_user
+    connect_db, init_db, save_game, get_game, new_game
 
 
 class GameSiteTestCase(unittest.TestCase):
@@ -15,7 +15,9 @@ class GameSiteTestCase(unittest.TestCase):
         self.db_fd, app.config['DATABASE'] = tempfile.mkstemp()
         app.config['TESTING'] = True
         self.app = app.test_client()
-        init_db()
+        with app.test_request_context():
+            flask.g.db = connect_db()
+            init_db()
 
     def tearDown(self):
         os.close(self.db_fd)
@@ -29,12 +31,6 @@ class GameSiteTestCase(unittest.TestCase):
         self.assertTrue(re.findall(('<div class="room">'), gotten.data) and re.findall(('<h3>Bedroom</h3>'), gotten.data))
         self.assertTrue(re.findall(("<h4>Inventory</h4>"), gotten.data) and re.findall(("<ul>"), gotten.data)\
                         and re.findall(("<li>Empty</li>"), gotten.data))
-
-    def test_first_session(self):
-        "The initial session id should be set to 1"
-        with self.app as test:
-            gotten = test.get('/')
-            self.assertEquals(flask.session['id'], 1)
 
     def test_post_action(self):
         "Posting an action should cause it to show up in requests"
@@ -71,7 +67,7 @@ class GameSiteTestCase(unittest.TestCase):
             self.assertEquals(gotten.data, updated.data)
 
     def test_new_game_id(self):
-        "Creating a new game should increment the session id"
+        "Creating a new game should change the session id"
         self.app2 = app.test_client()
         id_1, id_2 = 0, 0
         with self.app as test:
@@ -80,7 +76,7 @@ class GameSiteTestCase(unittest.TestCase):
         with self.app2 as test:
             test.get('/')
             id_2 = flask.session['id']
-        self.assertEquals(id_1 + 1, id_2)
+        self.assertNotEqual(id_1, id_2)
 
     def test_new_game_game(self):
         "Posting an action and then creating a new game should return the base game"

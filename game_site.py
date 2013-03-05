@@ -1,8 +1,16 @@
 from game import Game
-from adv_db_methods import SECRET_KEY, DATABASE, DEBUG, app,\
-                            connect_db, init_db, save_game, get_game, delete_game, create_user, get_new_id
+from adv_db_methods import SECRET_KEY, DATABASE, DEBUG, app, g, \
+                            connect_db, init_db, save_game, get_game, new_game
 
 from flask import Flask, render_template, request, session, redirect, url_for
+
+@app.before_request
+def before_request():
+    g.db = connect_db()
+
+@app.teardown_request
+def teardown_request(exception):
+    g.db.close()
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -15,17 +23,17 @@ def index():
                             inventory=loaded_game.game['inv'], exits=loaded_game.game['location'].exits)
             else:
                 print "creating a new game for user", session['id']
-                new_game = Game()
-                create_user(new_game, user_id=session['id'])
-                return render_template('form.html', room=new_game.game['location'], inventory=new_game.game['inv'], 
-                                    exits=new_game.game['location'].exits)
+                game = Game()
+                new_game(game, session['id'])
+                return render_template('form.html', room=game.game['location'], inventory=game.game['inv'], 
+                                    exits=game.game['location'].exits)
         else:
             print "loading a totally new game"
-            new_game = Game()
-            session['id'] = create_user(new_game)
+            game = Game()
+            session['id'] = new_game(game)
             print "new session id created:", session['id']
-            return render_template('form.html', room=new_game.game['location'], inventory=new_game.game['inv'], 
-                                    exits=new_game.game['location'].exits)
+            return render_template('form.html', room=game.game['location'], inventory=game.game['inv'], 
+                                    exits=game.game['location'].exits)
             
     elif request.method == 'POST':
         action = request.form['action']
@@ -42,8 +50,8 @@ def index():
 @app.route('/newgame', methods=['GET'])
 def newgame():
     old_id = session['id']
-    delete_game(old_id)
-    session['id'] = get_new_id()
+    game = Game()
+    session['id'] = new_game(game, old_id)
     print "user", old_id, "deleted"
     return redirect(url_for('index'))
 
