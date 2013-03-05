@@ -1,0 +1,1 @@
+{"game": {"inv": {}, "rooms": {"Closet": {"chair": {"has_user": false}}, "Bedroom": {"unreachable_lamp": {"is_lit": false, "block": true}, "bed": {}, "dresser": {"objects": [], "is_open": false}}}, "location": "Bedroom"}, "user_id": 5}

@@ -1,52 +1,59 @@
-from game import bec_game as initial
-from play_game import play_game
+from game import Game
 from adv_db_methods import SECRET_KEY, DATABASE, DEBUG, app,\
                             connect_db, init_db, save_game, get_game, delete_game, create_user
 
 from flask import Flask, render_template, request, session, redirect, url_for, g
 
-@app.before_request
-def before_request():
-    g.db = connect_db()
+# @app.before_request
+# def before_request():
+#     g.db = connect_db()
 
 @app.teardown_request
 def teardown_request(exception):
-    g.db.close()
+    try:
+        g.db.close()
+    except AttributeError:
+        pass
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'GET':
-        try:
-            loaded = get_game(session['id'])
-            # if a session is already running and it exists in the DB, try to load the user's previous game
-            if session['id'] and loaded: 
+        if 'id' in session:
+            loaded_game = get_game(session['id'])
+            if loaded_game:
                 print "session", session['id'], "is already initialized"
-                return render_template('form.html', room=loaded['location'], \
-                            inventory=loaded['inv'], exits=loaded['location'].exits)
+                return render_template('form.html', room=loaded_game.game['location'],
+                            inventory=loaded_game.game['inv'], exits=loaded_game.game['location'].exits)
             else:
-                raise KeyError
-        # otherwise, load a new game
-        except KeyError: 
+                print "creating a new game for user", session['id']
+                new_game = Game()
+                create_user(new_game, user_id=session['id'])
+                return render_template('form.html', room=new_game.game['location'], inventory=new_game.game['inv'], 
+                                    exits=new_game.game['location'].exits)
+        else:
             print "loading a totally new game"
-            session['id'] = create_user(initial())
+            new_game = Game()
+            session['id'] = create_user(new_game)
             print "new session id created:", session['id']
-            return render_template('form.html', room=initial['location'], inventory=initial['inv'], exits=initial['location'].exits)
+            return render_template('form.html', room=new_game.game['location'], inventory=new_game.game['inv'], 
+                                    exits=new_game.game['location'].exits)
             
     elif request.method == 'POST':
         action = request.form['action']
         user_id = session['id']
         loaded = get_game(user_id)
-        updated_game, msg = play_game(loaded, action)
-        save_game(session['id'], updated_game)
+        msg = loaded.play(action)
+        print "loaded", loaded.serialise()
+        save_game(session['id'], loaded)
         print "saving game for user", session['id']
-        return render_template('form.html', room=updated_game['location'], inventory=updated_game['inv'], \
-                                exits=updated_game['location'].exits, message=msg)
+        return render_template('form.html', room=loaded.game['location'], inventory=loaded.game['inv'], \
+                                exits=loaded.game['location'].exits, message=msg)
 
 @app.route('/newgame', methods=['GET'])
 def newgame():
     old_id = session['id']
     delete_game(old_id)
-    del session['id']
+    session['id'] = old_id + 1
     print "user", old_id, "deleted"
     return redirect(url_for('index'))
 

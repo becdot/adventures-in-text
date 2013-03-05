@@ -12,3 +12,5 @@ To do
     - serialise and deserialise won't track changes to objects inside other objects
     - all objects are checked against base game (assumes that no objects get created or destroyed -- might want to change)
 - dynamic room class creation?
+- file saving
+ - if two people have the same session id, it overwrites the previous data -- need to check to see whether id is in database, and if so, increment it further?

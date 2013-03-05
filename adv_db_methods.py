@@ -1,50 +1,80 @@
-import sqlite3
 from flask import Flask, request, session, g, redirect, url_for, \
      render_template, flash
 from contextlib import closing
-from pickle import dumps, loads
+from json import loads, dumps
+from game import Game
 
 
-SECRET_KEY = '\xf0$V\xe52\x1e\xc4\x9b\xe5\xb8\x06\xcda\x90\x93W\xca\xe8c\xec\xe6\x1b\xa3\xa1'
+SECRET_KEY = 'my_secret_key'
 DEBUG = True
-DATABASE = 'game.db'
+DATABASE = 'database.txt'
 
 app = Flask(__name__)
 app.config.from_object(__name__)
 
 
-def connect_db():
-    return sqlite3.connect(app.config['DATABASE'])
+def connect_db(mode='r'):
+    return open(app.config['DATABASE'], mode)
 
 def init_db():
-    with closing(connect_db()) as db:
-        with app.open_resource('adv_schema.sql') as instr:
-            db.cursor().executescript(instr.read())
-        db.commit()
+    with closing(connect_db(mode='w')) as db:
+        pass
+
+def user_exists(user_id):
+    with closing(connect_db('r')) as db:
+        data = [loads(line) for line in db.readlines() if loads(line)[u'user_id'] == user_id]
+        if data:
+            return True
+        return False
 
 def save_game(user_id, game):
-    pickled = dumps(game)
-    g.db.execute('UPDATE game SET data = (?) WHERE id = (?)', [pickled, user_id])
-    assert unicode(pickled) == g.db.execute('SELECT data FROM game WHERE id = (?)', [user_id]).fetchall()[0][0]
-    g.db.commit()
+    "DB mode = a"
+    with closing(connect_db('a')) as db:
+        serial = dumps({'user_id': user_id, 'game': game.serialise()})
+        serial += '\n'
+        print "saving", serial
+        if user_exists(user_id):
+            delete_game(user_id)
+            db.write(serial)
+        else:
+            db.write(serial)            
 
 def get_game(user_id):
-    cur = g.db.execute('SELECT data FROM game WHERE id = (?)', [user_id])
-    data = cur.fetchall()
-    if data:
-        return loads(data[0][0])
-    return None
+    "DB mode = r"
+    with closing(connect_db('r')) as db:
+        data = [loads(line) for line in db.readlines() if loads(line)[u'user_id'] == user_id]
+        print "data", data
+        if data:
+            return Game(data[0]['game'])
+        return None
 
 def delete_game(user_id):
-    g.db.execute('DELETE FROM game WHERE id = (?)', [user_id])
-    assert unicode(user_id) not in g.db.execute('SELECT id FROM game').fetchall()
-    print "game deleted successfully"
-    g.db.commit()
+    "DB mode = rw"
+    with closing(connect_db('r+')) as db:
+        data = db.readlines()
+        for i, line in enumerate(data):
+            decoded = loads(line)
+            if decoded['user_id'] == user_id:
+                print "deleting", decoded['user_id']
+                del(data[i])
+        print "remaining data", data
+        if data:
+            db.seek(0)
+            db.writelines(data)
+            db.truncate()
+        else:
+            db.seek(0)
+            db.write('')
+            db.truncate()
 
-def create_user(blank_game):
-    pickled = dumps(blank_game)
-    g.db.execute('INSERT INTO game (data) VALUES (?)', [pickled])
-    g.db.commit()
-    flash('New user successfully created')
-    user_id = g.db.execute('SELECT id FROM game ORDER BY id DESC').fetchall()[0][0]
-    return user_id
+def create_user(blank_game, user_id=None):
+    "DB mode = r"
+    with closing(connect_db('r')) as db:
+        if not user_id:
+            user_id = 1        
+            ids = [loads(line)['user_id'] for line in db.readlines()]
+            if ids: 
+                user_id = sorted(ids)[-1] + 1
+        save_game(user_id, blank_game)
+        flash('New user successfully created')
+        return user_id
