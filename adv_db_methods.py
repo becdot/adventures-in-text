@@ -1,4 +1,4 @@
-from flask import Flask, request, session, g, redirect, url_for, \
+from flask import Flask, request, session, redirect, url_for, \
      render_template, flash
 from contextlib import closing
 from json import loads, dumps
@@ -21,6 +21,7 @@ def init_db():
         pass
 
 def user_exists(user_id):
+    "Returns True if user_id exists in the database"
     with closing(connect_db('r')) as db:
         data = [loads(line) for line in db.readlines() if loads(line)[u'user_id'] == user_id]
         if data:
@@ -28,11 +29,10 @@ def user_exists(user_id):
         return False
 
 def save_game(user_id, game):
-    "DB mode = a"
+    "Serialises game and overwrites user's last saved game, if it exists"
     with closing(connect_db('a')) as db:
         serial = dumps({'user_id': user_id, 'game': game.serialise()})
         serial += '\n'
-        print "saving", serial
         if user_exists(user_id):
             delete_game(user_id)
             db.write(serial)
@@ -40,24 +40,22 @@ def save_game(user_id, game):
             db.write(serial)            
 
 def get_game(user_id):
-    "DB mode = r"
+    """If the user exists in the database, returns a Game object initialised with the user's last saved game.
+        Otherwise, returns None."""
     with closing(connect_db('r')) as db:
-        data = [loads(line) for line in db.readlines() if loads(line)[u'user_id'] == user_id]
-        print "data", data
-        if data:
+        if user_exists(user_id):
+            data = [loads(line) for line in db.readlines() if loads(line)[u'user_id'] == user_id]
             return Game(data[0]['game'])
         return None
 
 def delete_game(user_id):
-    "DB mode = rw"
+    "Deletes the data associated with a user's id"
     with closing(connect_db('r+')) as db:
         data = db.readlines()
         for i, line in enumerate(data):
             decoded = loads(line)
             if decoded['user_id'] == user_id:
-                print "deleting", decoded['user_id']
                 del(data[i])
-        print "remaining data", data
         if data:
             db.seek(0)
             db.writelines(data)
@@ -68,6 +66,7 @@ def delete_game(user_id):
             db.truncate()
 
 def get_new_id():
+    "Returns the unused id"
     with closing(connect_db('r')) as db:       
         ids = [loads(line)['user_id'] for line in db.readlines()]
         user_id = 1
@@ -76,7 +75,8 @@ def get_new_id():
         return user_id
 
 def create_user(blank_game, user_id=None):
-    "DB mode = r"
+    """Saves a blank game and returns a new unique user id if one is not provided.
+        Otherwise, saves the game and returns the provided id."""
     with closing(connect_db('r')) as db:
         if not user_id:
             user_id = get_new_id()

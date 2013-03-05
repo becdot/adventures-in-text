@@ -72,13 +72,15 @@ class GameSiteTestCase(unittest.TestCase):
 
     def test_new_game_id(self):
         "Creating a new game should increment the session id"
+        self.app2 = app.test_client()
+        id_1, id_2 = 0, 0
         with self.app as test:
             test.get('/')
             id_1 = flask.session['id']
-            test.get('/newgame', follow_redirects=True)
+        with self.app2 as test:
             test.get('/')
             id_2 = flask.session['id']
-            self.assertEquals(id_1 + 1, id_2)
+        self.assertEquals(id_1 + 1, id_2)
 
     def test_new_game_game(self):
         "Posting an action and then creating a new game should return the base game"

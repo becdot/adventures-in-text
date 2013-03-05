@@ -2,18 +2,7 @@ from game import Game
 from adv_db_methods import SECRET_KEY, DATABASE, DEBUG, app,\
                             connect_db, init_db, save_game, get_game, delete_game, create_user, get_new_id
 
-from flask import Flask, render_template, request, session, redirect, url_for, g
-
-# @app.before_request
-# def before_request():
-#     g.db = connect_db()
-
-@app.teardown_request
-def teardown_request(exception):
-    try:
-        g.db.close()
-    except AttributeError:
-        pass
+from flask import Flask, render_template, request, session, redirect, url_for
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -45,7 +34,6 @@ def index():
         user_id = session['id']
         loaded = get_game(user_id)
         msg = loaded.play(action)
-        print "loaded", loaded.serialise()
         save_game(session['id'], loaded)
         print "saving game for user", session['id']
         return render_template('form.html', room=loaded.game['location'], inventory=loaded.game['inv'], \
