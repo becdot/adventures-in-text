@@ -67,7 +67,7 @@ class TestGrammar(unittest.TestCase):
         # dresser is closed
         self.dresser.objects.append(self.lamp)
         action = "get lamp"
-        self.assertEquals(parse(action, self.room, self.inv), "You can't get this object.")
+        self.assertEquals(parse(action, self.room, self.inv), "That is not a valid action.")
         # dresser is open
         self.dresser.is_open = True
         self.assertEquals(parse(action, self.room, self.inv), "More than one object fits that name.")
@@ -123,7 +123,7 @@ class TestGrammar(unittest.TestCase):
     def test_invalid_action_with_valid_object(self):
         "An invalid action will return an action-related error message"
         action = "stand on lamp"
-        self.assertEquals(parse(action, self.room, self.inv), "You can't stand this object.")                
+        self.assertEquals(parse(action, self.room, self.inv), "That is not a valid action.")                
         action = "spit on bed"
         self.assertEquals(parse(action, self.room, self.inv), "That is not a valid action.")                
 

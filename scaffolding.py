@@ -68,20 +68,3 @@ class Object(object):
 
     def look(self, **kwargs):
         return str(self)
-
-# define all possible verbs on Object to return an error message (You can't <verb> this object)
-# properties can override these base verbs
-
-VERBS = ['open', 'close', 'pull', 'push', 'shut', 'light', 'turn_on', 'snuff', 'turn_off', 'get', 'pickup', 'drop', 'climb',\
-        'stand', 'get_on', 'get_off', 'get_down', 'put_in', 'look_in']
-
-def set_methods(verbs):
-    def make_func(verb):
-        def verbage(self, *args, **kwargs):
-            return "You can't {} this object.".format(verb)
-        return verbage
-
-    for v in verbs:
-        setattr(Object, v, make_func(v))
-
-set_methods(VERBS)
