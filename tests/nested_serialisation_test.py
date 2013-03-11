@@ -29,7 +29,7 @@ class Serialisation(unittest.TestCase):
         s = g.serialise()
         base2.deserialise(s)
         new = base2.game
-        self.assertEquals(old,  new)
+        self.assertEquals(old, new)
 
     def test_nested_serialisation(self):
         "Tests basic game functions (same as mini_game.py) with serialisation"

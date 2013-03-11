@@ -1,30 +1,29 @@
-from scaffolding import Room, Object
-from objects import Bed, Dresser, UnreachableLamp, Chair
+# THE GAME
+
+# Game details (i.e. objects, rooms) are defined in bec_game.py
+# Game can be played via self.play(user_action), which uses grammar.py to parse and call the user action
+# self.serialise() turns the game into a dictionary of strings (similar to JSON format)
+# The deserialise function is used by passing a serialised game instance to the init method (e.g. new = Game(serialised_data))
+#    This recreates the base game, and applies any changes from the serialised data to the new game instance
+
+from scaffolding import Room
+from test_game import TestGame
 from grammar import parse
 
 class Game:
 
     def __init__(self, data=None):
+        "If a serialised game instance is provided, calls self.deserialise(serial) to update game with those changes"
 
-        bed = Bed()
-        lamp = UnreachableLamp()
-        dresser = Dresser()
-        chair = Chair()
-        Bedroom = Room(name='Bedroom', objects=[bed, lamp, dresser], description='A homey room with blue wallpaper \
-            and old-fashioned scenes hanging from brass frames.  There is a large four-poster against one wall \
-            and a small dresser in the corner.', exits={})
-        Closet = Room(name='Closet', objects=[chair], description='Significantly colder than the bedroom, \
-            the closet has a slanted roof that only makes it feel more cramped', exits={})
-        Bedroom.exits['west'] = Closet
-        Closet.exits['east'] = Bedroom
-
-        self.all_objs = [bed, lamp, dresser, chair]
-        self.game = {'rooms': [Bedroom, Closet], 'inv': [], 'location': Bedroom}
+        base = TestGame()
+        self.game = base.game
+        self.all_objs = base.all_objs
 
         if data:
             self.deserialise(data)
 
     def __eq__(self, other):
+        "Compares two game instances for equality"
         if self.game['location'] != other.game['location']:
             return False
         for i in range(len(self.game['inv'])):
@@ -36,6 +35,7 @@ class Game:
         return True
 
     def __ne__(self, other):
+        "Compares two game instances for inequality"
         if self.game['location'] != other.game['location']:
             return True
         for i in range(len(self.game['inv'])):
@@ -60,7 +60,7 @@ class Game:
         return update
 
     def serialise(self):
-        """Turns self.game into a dictionary and returns that.
+        """Turns self.game into a dictionary of strings (similar to JSON) and returns that.
         Only serialises changeable aspects of objects and rooms"""
         data = {'rooms': [room.serialise() for room in self.game['rooms']]}
         data['inv'] = [obj.serialise() for obj in self.game['inv']]
@@ -89,12 +89,12 @@ class Game:
                     self.assign_objects(inner_dic)
 
     def get_room(self, room_name):
-        "Returns an object, given that object's id"
+        "Returns a room, given that room's name"
         return [room for room in self.game['rooms'] if room.name == room_name][0]
 
     def deserialise(self, data):
         """Given a dictionary of serialised information, updates each_room.objects and calls each_room.deserialise()
-            which updates any changes for the individual objects."""
+            which updates any changes for the individual objects.  Also updates game['location'] and game['inv']"""
         for room_dict in data['rooms']:
             room = self.get_room(room_dict['name'])
             room.objects = []

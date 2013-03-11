@@ -1,4 +1,10 @@
-# Properties
+# MIX-INS
+
+# Specific objects inherit from these properties, in addition to inheriting from Object 
+#     e.g. Dresser inherits from Openable, Container, and Object, while Lamp inherits from Lightable and Object
+# Mix-ins define verbs that can be used on the objects, as well as required attributes 
+# (throws an error when creating an object if it does not define all required attributes)
+# and changeable attributes (used in object serialisation).
 
 class Openable(object):
     required_attrs = ['is_open', 'open_description', 'closed_description']
@@ -203,9 +209,9 @@ class Container(object):
         if self.is_open:
             if len(self.objects) > 1:
                 description = "This object contains: " + "{}, " * (len(self.objects) - 1) + "{}."
-                return description.format(*self.objects)
+                return description.format(*[obj.name for obj in self.objects])
             elif len(self.objects) == 1:
-                return "This object has a {} inside.".format(self.objects[0])
+                return "This object has a {} inside.".format(self.objects[0].name)
             else:
                 return "This object is empty."
         else:

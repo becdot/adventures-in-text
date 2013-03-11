@@ -1,5 +1,10 @@
+# FLASK WEBSITE
+
+# Runs the game online (currently only on localhost: 5000)
+# Renders html, passes user_action to game.play(action), and calls database methods to get, save, and delete games
+
 from game import Game
-from adv_db_methods import SECRET_KEY, DATABASE, COLLECTION, DEBUG, app, g, \
+from db_methods import SECRET_KEY, DATABASE, COLLECTION, DEBUG, app, g, \
                             connect_db, init_db, save_game, get_game, new_game
 
 from flask import Flask, render_template, request, session, redirect, url_for

@@ -1,7 +1,15 @@
+# OBJECT CREATION
+
+# Dynamically creates objects from a dictionary in the form {'bases': [], 'attributes': {}, 'methods': {}}
+# During creation, checks to make sure that all attributes specified in required_attrs 
+# for each of the object's bases have been provided
+
 from scaffolding import Object
 from properties import Openable, Lightable, UnreachableLight, Gettable, Climbable, Container
 
 def validate_attrs(bases):
+    """Decorator for an object's init method to check that all attributes 
+    specified in required_attrs for each of the object's bases have been provided"""
     def decorator(init):
         def decorated(self, *args, **kwargs):
             init(self, *args, **kwargs)
@@ -64,23 +72,26 @@ def create_object(bases=(), attributes={}, methods={}):
         return {'id': self.id, 'attrs': attrs_dic}
 
     def get_obj(self, obj_id):
+        """Returns nested_object contained within self.objects, given nested_object's id.  
+            If it does not exists, returns False"""
         if hasattr(self, 'objects'):
             return [obj for obj in self.objects if obj.id == obj_id][0]
         return None
 
     def deserialise(self, data):
-        "Updates object's attributes to match those in data, which is a dictionary of changeable attributes for that object"
+        """Updates object's attributes to match those in data, which is a serialised dictionary 
+            of changeable attributes for that object"""
         for attr, value in data['attrs'].items():
             # if obj.attr is a list of objects, call deserialise on each of those objects
             if hasattr(self, attr) and value and isinstance(value, list):
                 for obj_dic in value:
                     obj = self.get_obj(obj_dic['id'])
                     obj.deserialise(obj_dic)
-                # map(lambda dic: self.get_obj(dic['id']).deserialise(dic), value)
             # otherwise, just update the obj.attr with the new value
             else:
                 setattr(self, attr, value)
 
+    # need to set each of the defined methods on the object
     methods['__init__'] = init
     methods['__eq__'] = equals
     methods['__ne__'] = not_equal
@@ -88,6 +99,6 @@ def create_object(bases=(), attributes={}, methods={}):
     methods['serialise'] = serialise
     methods['deserialise'] = deserialise
 
-
+    # and actually create the object
     return type(cls_name, bases, methods)
     

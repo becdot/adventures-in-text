@@ -4,6 +4,10 @@ from objects import Bed, Dresser, Lamp, UnreachableLamp, Chair
 
 import unittest
 
+class FakeObject:
+    def __init__(self, name):
+        self.name = name
+
 class Room:
     def __init__(self, *objs):
         self.objects = [o for o in objs]
@@ -52,13 +56,15 @@ class TestObjects(unittest.TestCase):
         self.assertEquals(str(self.dresser),\
         self.dresser.description + '  ' + self.dresser.open_description + '  This object is empty.')
         # self.objects = ["key"]
-        self.dresser.objects = ["key"]
+        key = FakeObject('key')
+        self.dresser.objects = [key]
         self.assertEquals(str(self.dresser),\
             self.dresser.description + '  ' + self.dresser.open_description + '  ' + "This object has a key inside.")
-        # self.objects = ["sword", "letter", "key"]
-        self.dresser.objects = ["sword", "letter", "key"]
+        # self.objects = ["sword", "key"]
+        sword = FakeObject('sword')
+        self.dresser.objects = [sword, key]
         self.assertEquals(str(self.dresser),\
-            self.dresser.description + '  ' + self.dresser.open_description + '  ' + "This object contains: sword, letter, key.")
+            self.dresser.description + '  ' + self.dresser.open_description + '  ' + "This object contains: sword, key.")
     def test_dresser_look(self):
         "dresser.look() returns the dresser.description + open/closed description (based on dresser.is_open)"
         self.assertEquals(self.dresser.look(), str(self.dresser))
@@ -119,11 +125,13 @@ class TestObjects(unittest.TestCase):
         self.dresser.is_open = True
         self.assertEquals(self.dresser.look_in(), "This object is empty.")
         # self.objects = ["key"]
-        self.dresser.objects = ["key"]
+        key = FakeObject('key')
+        self.dresser.objects = [key]
         self.assertEquals(self.dresser.look_in(), "This object has a key inside.")
         # self.objects = ["sword", "letter", "key"]
-        self.dresser.objects = ["sword", "letter", "key"]
-        self.assertEquals(self.dresser.look_in(), "This object contains: sword, letter, key.")
+        sword = FakeObject('sword')
+        self.dresser.objects = [sword, key]
+        self.assertEquals(self.dresser.look_in(), "This object contains: sword, key.")
 
 
     # test lamp

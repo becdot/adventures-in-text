@@ -1,3 +1,8 @@
+# SPECIFIC OBJECTS
+
+# Defines dictionaries of information necessary for creating the object, for each object
+# Specific objects are created using create_object in creation.py, and defined at the bottom
+
 from scaffolding import Object
 from properties import Openable, Lightable, UnreachableLight, Gettable, Climbable, Container
 from creation import create_object

@@ -5,7 +5,7 @@ import re
 from flask import request, session, g
 
 import game_site as site
-from adv_db_methods import SECRET_KEY, DATABASE, DEBUG, app,\
+from db_methods import SECRET_KEY, DATABASE, DEBUG, app,\
     connect_db, init_db, save_game, get_game, new_game
 
 

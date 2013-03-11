@@ -1,16 +1,43 @@
 adventures-in-text
 ==================
 
-A text-based adventure game framework, written in Python, with aspirations of becoming playable via a Flask site.
-
-Steps:
-
-1. Write the backend in Python
- - Make room, object, and mix-in (e.g. Climbable, Lightable) classes
- - Create a grammar so that the player can type traditional commands (e.g. 'light lamp' vs. 'lamp.light()')
- - Have some sort of global user information (i.e. current location, inventory, etc.) that is passed to necessary objects
-2. Use Flask to make a website that can run the game
-3. Create some kind of REPL-like interface using javascript that mediates between the player and database
- - Note -- this step is still a bit murky
+##A text-based adventure game framework, written in Python, running on Flask
 
 
+###REQUIREMENTS:
+------------
+- Must have [Flask](http://flask.pocoo.org/) and [pymongo](https://pypi.python.org/pypi/pymongo/) installed.
+
+###OVERVIEW:
+------------
+- Game can be run with the shell command `python game_site.py` and accessed at http://localhost:5000
+- Users can enter actions and interact with objects!
+- Games are saved using a custom serialisation method, and stored in a MongoDB database.
+- Uses Flask sessions to remember which game is associated with a particular browser, so that users can go back to their last game
+
+###GAME CREATION:
+------------
+####New objects, rooms, and games are easy to create and can be played using the built-in game engine
+- Rooms
+    * Defined in scaffolding.py
+    * Syntax -> Room(name, list_of_objects, description, dictionary_of_exits)
+- Objects
+    * Inherit from Object (scaffolding.py) and any number of Mix-ins (properties.py)
+    * Defined by a dictionary that must contain a list of bases, a dictionary of attributes, and a dictionary of methods
+    ```chair_dict = {'bases': (Climbable, Gettable, Object),'attributes': {'id': "chair", 'name': "chair", 'has_user': False, 'description': "A sturdy wooden chair with dark wooden slats."}}```
+    * Created dynamically in creation.py, using the object's information dictionary
+- Game
+    * A class that must create all objects and rooms in the init method
+    * Once all rooms and objects are created, should be stored in the form:
+    ```game = {'rooms': [room1, room2], 'location': room1, 'inv': [key]}```
+    * Example game can be found in bec_game.py
+- Game engine
+    * All game functionality is defined in game.py
+    * To add a different game, replace `from test_game import TestGame` with `from your_game_file import MyGameClass` and replace `base = BecGame()` with `base = MyGameClass()`
+    * Run the game in the shell with the command `python game_site.py` and visit http://localhost:5000 to play!
+- Additionals
+    * Running the game with Flask happens in game_site.py
+    * User action parsing is taken care of by grammar.py
+    * HTML can be found in the static folder
+- Bugs
+    * An incomplete list of these can be found in To do!

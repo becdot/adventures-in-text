@@ -6,9 +6,7 @@ To do
     - have support for more than four-word actions
     - use lambdas or mapping instead of list comprehensions
     - less hardcoded, more intelligent processing
-    - better default error processing instead of setting VERBS on base Object
-- in light of passing in room and inv, can rethink UnreachableLightable and Climable private methods/attributes?
 - serialise/deserialise
-    - serialise and deserialise won't track changes to objects inside other objects
     - all objects are checked against base game (assumes that no objects get created or destroyed -- might want to change)
 - dynamic room class creation?
+- rewrite game_site so that it doesn't connect and disconnect to/from the database before/after every request

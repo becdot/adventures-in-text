@@ -1,3 +1,8 @@
+# DATABASE METHODS
+
+# Uses pymongo to write to a Mongo DB
+# Defines get_game, save_game, and new_game functions
+
 from flask import Flask, request, session, redirect, url_for, \
      render_template, flash, g
 from contextlib import closing
@@ -13,7 +18,6 @@ COLLECTION = 'games'
 
 app = Flask(__name__)
 app.config.from_object(__name__)
-
 
 def connect_db():
     "Connect to the database -- must have a mongod client running"

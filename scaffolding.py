@@ -1,7 +1,16 @@
-# Parent classes
+# ROOM AND PARENT OBJECT CLASSES
+
+# Rooms inherit from the Room class
+#    -- note: room exits must be set after rooms are created, since they contain references to each other
+#
+# All objects inherit from this parent Object class
+# It defines basic functionality (e.g. 'look' common to all objects) and attributes required for all objects (e.g. name)
+#   -- note: objects must inherit from Object LAST, after other mix-ins (actually, this might not be true)
 
 class Room(object):
     def __init__(self, name, objects, description, exits={}):
+        """name = string, used to identify the room; objects = list of objects; description = string, 
+            exits = dictionary of directions and room instances (e.g. {'north': Bedroom})"""
         self.name = name
         self.objects = objects
         self.description = description
@@ -55,7 +64,6 @@ class Room(object):
             return self.exits[direction]
         else:
             return "You cannot go that way."
-
 
 class Object(object):
     required_attrs = ['name', 'id', 'description']
