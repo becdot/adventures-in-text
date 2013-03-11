@@ -35,10 +35,10 @@ adventures-in-text
    * A class that must create all objects and rooms in the init method
    * Once all rooms and objects are created, should be stored in the form:
    `game = {'rooms': [room1, room2], 'location': room1, 'inv': [key]}`
-   * Example game can be found in bec_game.py
+   * Example game can be found in test_game.py
 - Game engine
    * All game functionality is defined in game.py
-   * To add a different game, replace `from test_game import TestGame` with `from your_game_file import MyGameClass` and replace `base = BecGame()` with `base = MyGameClass()`
+   * To add a different game, replace `from test_game import TestGame` with `from your_game_file import MyGameClass` and replace `base = TestGame()` with `base = MyGameClass()`
    * Run the game in the shell with the command `python game_site.py` and visit http://localhost:5000 to play!
 - Additionals
    * Running the game with Flask happens in game_site.py
