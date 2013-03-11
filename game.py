@@ -1,6 +1,6 @@
 # THE GAME
 
-# Game details (i.e. objects, rooms) are defined in bec_game.py
+# Game details (i.e. objects, rooms) are defined in test_game.py
 # Game can be played via self.play(user_action), which uses grammar.py to parse and call the user action
 # self.serialise() turns the game into a dictionary of strings (similar to JSON format)
 # The deserialise function is used by passing a serialised game instance to the init method (e.g. new = Game(serialised_data))
