@@ -23,7 +23,7 @@ adventures-in-text
    * Syntax -> Room(name, list_of_objects, description, dictionary_of_exits)
 - Objects
    * Inherit from Object (scaffolding.py) and any number of Mix-ins (properties.py)
-   * Defined by a dictionary that must contain a list of bases, a dictionary of attributes, and a dictionary of methods
+   * Defined by a dictionary that must contain a list of bases, a dictionary of attributes, and a dictionary of methods (objects.py)
    * Created dynamically in creation.py, using the object's information dictionary
 
 ```
