@@ -9,6 +9,7 @@ class Serialisation(unittest.TestCase):
             The old and new instances should be the same."""
         old = g.game
         s = g.serialise()
+        print s
         g = Game(s)
         new = g.game
         self.assertEquals(old, new)
@@ -64,6 +65,20 @@ class Serialisation(unittest.TestCase):
         game.play('light lamp')
         self.assertTrue(lamp.is_lit)
         self.serialise(game)
+        # if we put the chair in the dresser, the game should serialise properly
+        game.play('get off chair')
+        self.assertFalse(chair.has_user)
+        self.serialise(game)
+        game.play('get chair')
+        self.assertEquals(game.game['inv'], [chair])
+        self.serialise(game)
+        game.play('open dresser')
+        self.assertTrue(dresser.is_open)
+        self.serialise(game)
+        game.play('put chair in dresser')
+        self.assertEquals(dresser.objects, [chair])
+        self.serialise(game)
+
 
 if __name__ == '__main__':
     unittest.main()

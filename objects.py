@@ -2,8 +2,6 @@ from scaffolding import Object
 from properties import Openable, Lightable, UnreachableLight, Gettable, Climbable, Container
 from creation import create_object
 
-# Specific Objects
-
 def light_str(self):
     if self.is_lit:
         return '  '.join([self.description, self.on_description])

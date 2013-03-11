@@ -189,6 +189,8 @@ class Container(object):
     def put_in(self, obj, inventory=None, **kwargs):
         if inventory == None:
             raise Exception('inventory must be provided')
+        if obj not in inventory:
+            raise Exception('you must be holding that object')
 
         if self.is_open:
             self.objects.append(obj)

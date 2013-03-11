@@ -62,8 +62,8 @@ class Game:
     def serialise(self):
         """Turns self.game into a dictionary and returns that.
         Only serialises changeable aspects of objects and rooms"""
-        data = {'rooms': {room.name: room.serialise() for room in self.game['rooms']}}
-        data['inv'] = {obj.id: obj.serialise() for obj in self.game['inv']}
+        data = {'rooms': [room.serialise() for room in self.game['rooms']]}
+        data['inv'] = [obj.serialise() for obj in self.game['inv']]
         data['location'] = self.game['location'].name
         return data
 
@@ -71,13 +71,46 @@ class Game:
         "Returns an object, given that object's id"
         return [obj for obj in self.all_objs if obj.id == obj_id][0]
 
+    def assign_objects(self, obj_dict):
+        """If an object contains other objects, assigns them to container_obj.objects.
+        container.serialise() = 
+            {'id': 'dresser', 'attrs': {'is_open': False, 'objects': [{'id': 'chair', 'attrs': {has_user: False}}]}
+        This function sets dresser.objects = [chair] so that dresser.deserialise() can apply updates to chair if appropriate"""
+
+        outer_obj = self.get_obj(obj_dict['id'])
+        outer_obj.objects = []
+        for attr, value in obj_dict['attrs'].items():
+            # if value is a list of objects, assign to obj.objects
+            if value and isinstance(value, list):
+                for inner_dic in value:
+                    inner_obj = self.get_obj(inner_dic['id'])
+                    print "assigning {} to {}.objects".format(inner_obj.id, outer_obj.id)
+                    outer_obj.objects.append(inner_obj)
+                    self.assign_objects(inner_dic)
+
+    def get_room(self, room_name):
+        "Returns an object, given that object's id"
+        return [room for room in self.game['rooms'] if room.name == room_name][0]
+
     def deserialise(self, data):
         """Given a dictionary of serialised information, updates each_room.objects and calls each_room.deserialise()
             which updates any changes for the individual objects."""
-        for room in self.game['rooms']:
-            room_data = data['rooms'][room.name]
-            room.objects = [self.get_obj(obj_id) for obj_id in room_data.keys()]
-            room.deserialise(room_data)
-        self.game['inv'] = [self.get_obj(obj_id) for obj_id in data['inv'].keys()]
-        self.game['location'] = [room for room in self.game['rooms'] if room.name == data['location']][0]
+        for room_dict in data['rooms']:
+            room = self.get_room(room_dict['name'])
+            room.objects = []
+            for obj_dict in room_dict['objects']:
+                print "{} in room".format(obj_dict['id'])
+                self.assign_objects(obj_dict) 
+                obj = self.get_obj(obj_dict['id'])
+                room.objects.append(obj)
+            room.deserialise(room_dict)
+
+        self.game['inv'] = []
+        for obj_dict in data['inv']:
+            self.assign_objects(obj_dict) 
+            obj = self.get_obj(obj_dict['id'])
+            obj.deserialise(obj_dict)
+            self.game['inv'].append(obj)
+
+        self.game['location'] = self.get_room(data['location'])
         

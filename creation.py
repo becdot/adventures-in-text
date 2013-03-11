@@ -48,18 +48,46 @@ def create_object(bases=(), attributes={}, methods={}):
         return attrs != other_attrs or attrs.values() != other_attrs.values()
 
     def serialise(self):
-        return {attr: getattr(self, attr) for base in bases for attr in base.changeable_attrs}
+        """Returns a dictionary of attributes and values for every attribute listed in changeable_attrs in the object's bases
+            e.g. {'id': 'dresser', 'attrs': {'is_open': False, 'objects': [{'id': 'chair', 'attrs': {has_user: False}}]}"""
+        attrs_dic = {}
+        changeable_attrs = [attr for base in bases for attr in base.changeable_attrs]
+        for attr in changeable_attrs:
+            # if obj.attr is a list of objects, call serialise on each of those objects
+            # and store the resulting dictionaries in attrs_dic
+            if getattr(self, attr) and isinstance(getattr(self, attr), list):
+                objects = getattr(self, attr)
+                attrs_dic[attr] = [obj.serialise() for obj in objects]
+            # otherwise, obj.attr is a string or boolean and can be put in attrs_dic directly
+            else:
+                attrs_dic[attr] = getattr(self, attr)
+        return {'id': self.id, 'attrs': attrs_dic}
+
+    def get_obj(self, obj_id):
+        if hasattr(self, 'objects'):
+            return [obj for obj in self.objects if obj.id == obj_id][0]
+        return None
 
     def deserialise(self, data):
-        for attr, value in data.items():
-            if hasattr(self, attr):
+        "Updates object's attributes to match those in data, which is a dictionary of changeable attributes for that object"
+        for attr, value in data['attrs'].items():
+            # if obj.attr is a list of objects, call deserialise on each of those objects
+            if hasattr(self, attr) and value and isinstance(value, list):
+                for obj_dic in value:
+                    obj = self.get_obj(obj_dic['id'])
+                    obj.deserialise(obj_dic)
+                # map(lambda dic: self.get_obj(dic['id']).deserialise(dic), value)
+            # otherwise, just update the obj.attr with the new value
+            else:
                 setattr(self, attr, value)
 
     methods['__init__'] = init
     methods['__eq__'] = equals
     methods['__ne__'] = not_equal
+    methods['get_obj'] = get_obj
     methods['serialise'] = serialise
     methods['deserialise'] = deserialise
+
 
     return type(cls_name, bases, methods)
     

@@ -25,7 +25,6 @@ def check_noun(location, inventory, noun, adj=None):
     room_inv_objs = [obj for obj in location.objects + inventory]
     all_objs = contained_objects + room_inv_objs
     all_named_objs = [obj.name for obj in all_objs]
-    print all_named_objs, noun
   
     # if there is only one match for the noun, return it
     if all_named_objs.count(noun) == 1:
@@ -51,16 +50,35 @@ def check_noun(location, inventory, noun, adj=None):
             return "More than one object fits that name."
         return "That object does not exist."
 
-def make_action(location, inventory, noun, verb, preposition=None):
+def make_action(location, inventory, noun, verb, preposition=None, noun2=None):
     # assumes that check_noun has been called first
     if isinstance(noun, str):
         return noun
     if preposition:
         verb_prep = verb + '_' + preposition
         if hasattr(noun, verb_prep):
-            return getattr(noun, verb_prep)(location=location, inventory=inventory)
+            try:
+                return getattr(noun, verb_prep)(location=location, inventory=inventory)
+            except TypeError:
+                return getattr(noun, verb_prep)(noun2, location=location, inventory=inventory)
     if hasattr(noun, verb):
-        return getattr(noun, verb)(location=location, inventory=inventory)
+        try:
+            return getattr(noun, verb)(location=location, inventory=inventory)
+        except TypeError:
+            return getattr(noun, verb)(noun2, location=location, inventory=inventory)
+
+    if preposition:
+        verb_prep = verb + '_' + preposition
+        if hasattr(noun2, verb_prep):
+            try:
+                return getattr(noun2, verb_prep)(location=location, inventory=inventory)
+            except TypeError:
+                return getattr(noun2, verb_prep)(noun, location=location, inventory=inventory)
+    if hasattr(noun2, verb):
+        try:
+            return getattr(noun2, verb)(location=location, inventory=inventory)
+        except TypeError:
+            return getattr(noun2, verb)(noun, location=location, inventory=inventory)    
     else:
        return "That is not a valid action."
 
@@ -110,24 +128,20 @@ def parse(action, location, inventory):
     if len(action) == 4:
         # assume action is in the form <verb preposition adjective noun> (e.g. stand on sturdy chair)
         # or in the form <verb preposition preposition noun> (e.g. get down from chair)
-        # or in the form <verb noun preposition noun> (e.g. get key from chest)
+        # or in the form <verb noun preposition noun> (e.g. get key from chest, put chair in trunk)
         verb, two, three, noun = action
         if two in prepositions:
             verb, prep, adj, noun = action
             obj = check_noun(location, inventory, noun, adj)
             return make_action(location, inventory, obj, verb, prep)
         if three in prepositions:
-            verb, noun = action[0], action[1]
-            obj = check_noun(location, inventory, noun)
-            return make_action(location, inventory, obj, verb)
+            verb, noun, prep, noun2 = action
+            obj_1 = check_noun(location, inventory, noun)
+            obj_2 = check_noun(location, inventory, noun2)
+            return make_action(location, inventory, obj_1, verb, prep, obj_2)
         else:
             return "I cannot parse this action."
-
-        
-
-
-
-
+            
     # if len(action) == 5:
     #     # assume action is in the form <verb adj noun preposition noun> (e.g. get large key from chest)
     #     # or <verb noun preposition adjective noun> (e.g. get key from locked chest)

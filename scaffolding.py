@@ -9,18 +9,14 @@ class Room(object):
 
     def __eq__(self, other):
         if len(self.objects) != len(other.objects):
-            print "len of objects !="
             return False
         for i in range(len(self.objects)):
             if sorted(self.objects)[i] != sorted(other.objects)[i]:
-                print "{} and {} not equal".format(self.objects[i], other.objects[i])
                 return False
         # return self.name == other.name and self.description == other.description
         if self.name != other.name:
-            print "names !="
             return False
         if self.description != other.description:
-            print "descriptions !="
             return False
         return True
 
@@ -34,14 +30,16 @@ class Room(object):
                 return True
         return False 
 
+    def get_obj(self, obj_id):
+        return [obj for obj in self.objects if obj.id == obj_id][0]
+
     def serialise(self):
         "Returns a dictionary with object ids as keys, and object serialisation dictionaries as values"
-        return {obj.id: obj.serialise() for obj in self.objects}
+        return {'name': self.name, 'objects': [obj.serialise() for obj in self.objects]}
 
     def deserialise(self, data):
         "Given a serialised dictionary, calls object.deserialise() on each object in self.objects"
-        obj_data = (obj_dic for obj_id, obj_dic in data.items())
-        map(lambda obj, dic: obj.deserialise(dic), self.objects, obj_data)
+        map(lambda dic: self.get_obj(dic['id']).deserialise(dic), data['objects'])
 
     def look(self, **kwargs):
         return self.description
