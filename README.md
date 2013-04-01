@@ -10,7 +10,7 @@ adventures-in-text
 
 ###OVERVIEW:
 ------------
-- Game can be played [here](http://ec2-54-244-180-72.us-west-2.compute.amazonaws.com/)
+- Game can be previewed [here](http://ec2-54-244-180-72.us-west-2.compute.amazonaws.com/)
 - After installing, game can also be run with the shell command `python game_site.py` and accessed at http://localhost:5000
 - Users can enter actions and interact with objects!
 - Games are saved using a custom serialisation method, and stored in a MongoDB database.
