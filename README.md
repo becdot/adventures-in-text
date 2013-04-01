@@ -13,12 +13,12 @@ adventures-in-text
 - Game can be previewed [here](http://ec2-54-244-180-72.us-west-2.compute.amazonaws.com/)
 - After installing, game can also be run with the shell command `python game_site.py` and accessed at http://localhost:5000
 - Users can enter actions and interact with objects!
-- Games are saved using a custom serialisation method, and stored in a MongoDB database.
+- Games are saved using a custom serialisation method, and stored in a MongoDB database
 - Uses Flask sessions to remember which game is associated with a particular browser, so that users can go back to their last game
 
 ###GAME CREATION:
 ------------
-####New objects, rooms, and games are easy to create and can be played using the built-in game engine
+####You can easily create your own game world and play it using the built-in game engine
 - Rooms
    * Defined in scaffolding.py
    * Syntax -> Room(name, list_of_objects, description, dictionary_of_exits)
