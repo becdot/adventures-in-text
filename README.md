@@ -1,12 +1,12 @@
 adventures-in-text
 ==================
 
-##A text-based adventure game framework, written in Python, running on Flask
+##An old-school style text-based adventure game framework
 
 
 ###REQUIREMENTS:
 ------------
-- Must have [Flask](http://flask.pocoo.org/) and [pymongo](https://pypi.python.org/pypi/pymongo/) installed.
+- Must have [Python](www.python.org/getit), [Flask](http://flask.pocoo.org/) and [pymongo](https://pypi.python.org/pypi/pymongo/) installed.
 
 ###OVERVIEW:
 ------------
